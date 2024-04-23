@@ -31,12 +31,12 @@ public class CreateTopicUseCase {
 
       TopicCriticality criticality = TopicCriticality.valueOf(input.criticality().toUpperCase(Locale.ROOT));
 
-      LOGGER.info("[flow:topic.create] Create topic with name {}, partitions {} and replication factor {}", topicName,
+      LOGGER.info("[flow:create.topic] Create topic with name {}, partitions {} and replication factor {}", topicName,
             criticality.getPartitions(), criticality.getReplicationFactor());
 
       Config config = this.kafkaClient.createTopic(topicName.finalName(), criticality.getPartitions(),
             criticality.getReplicationFactor());
-      LOGGER.info("[flow:topic.create] Config from topic {} is {}", topicName, config);
+      LOGGER.info("[flow:create.topic] Config from topic {} is {}", topicName, config);
       
       return new CreateTopicUseCaseOutput(topic.getName().finalName(), topic.getId(), topic.getCreatedAt());
    }

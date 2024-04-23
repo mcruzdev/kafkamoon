@@ -1,10 +1,10 @@
 ---
 version: '2'
 services:
-  kafkamoon-api:
-    image: kafkamoon-api:latest
-    ports:
-      - 8080:8080
+#  kafkamoon-api:
+#    image: kafkamoon-api:latest
+#    ports:
+#      - 8080:8080
   kafkamoon-docs:
     image: kafkamoon-docs:latest
     ports:

@@ -41,10 +41,10 @@ public class DefaultKafkaClient implements KafkaClient {
    }
 
    public Collection<TopicListing> listTopics() {
-      LOGGER.info("[flow:topic.list] Listing topics from Kafka bootstrap servers");
+      LOGGER.info("[flow:list.topic] Listing topics from Kafka bootstrap servers");
       try (AdminClient adminClient = AdminClient.create(this.props)) {
          ListTopicsResult result = adminClient.listTopics();
-         return result.listings().get(); // blocking call
+         return result.listings().get();
       } catch (ExecutionException | InterruptedException e) {
          //         TODO: handle exception
          throw new RuntimeException(e);

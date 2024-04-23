@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.matheuscruz.kafkamoon.api.Application;
 import dev.matheuscruz.kafkamoon.api.domain.topics.TopicCriticality;
 import dev.matheuscruz.kafkamoon.api.presentation.dto.CreateTopicRequest;
+import dev.matheuscruz.kafkamoon.api.usecases.topics.list.ListTopicsUseCaseOutput;
+import org.assertj.core.api.SoftAssertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +25,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -241,14 +244,30 @@ class TopicControllerITest {
             .andExpect(jsonPath("$.status", Matchers.is(400)))
             .andExpect(jsonPath("$.detail", Matchers.containsString("exceeds the maximum allowed length.")));
    }
-   //   @Test
-   //   @DisplayName("Should list topics correctly when page is 0 and size is 0")
-   //   void shouldReturnEmptyPage() throws Exception {
-   //
-   //      mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/topics").param("page", "0").param("size", "0")
-   //                  .contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
-   //            .andExpect(MockMvcResultMatchers.status().isOk())
-   //            .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString("0")));
-   //
-   //   }
+
+   @Test
+   @DisplayName("Should list topics correctly when page is 0 and size is 0")
+   void shouldReturnEmptyPage() throws Exception {
+
+      // arrange
+      CreateTopicRequest request = new CreateTopicRequest("user", "payments", "payment-created",
+            TopicCriticality.TEST.name());
+      String requestBody = mapper.writeValueAsString(request);
+
+      // act
+      mockMvc.perform(post("/api/v1/topics").contentType(MediaType.APPLICATION_JSON).content(requestBody)
+            .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isCreated());
+
+      String responseBody = mockMvc.perform(
+                  get("/api/v1/topics").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+      ListTopicsUseCaseOutput[] arr = mapper.readValue(responseBody, ListTopicsUseCaseOutput[].class);
+
+      // assert
+      SoftAssertions.assertSoftly(softly -> {
+         softly.assertThat(arr).isNotEmpty();
+         softly.assertThat(arr).anyMatch(topic -> topic.name().equals("user.payments.payment-created"));
+      });
+   }
 }
