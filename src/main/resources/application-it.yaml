@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: kafkamoon-api
+
+kafkamoon:
+  kafka:
+    bootstrap:
+      servers:

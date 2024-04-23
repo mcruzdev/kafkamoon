@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: kafkamoon-api
+server:
+  port: 8888
+
+
+kafkamoon:
+  kafka:
+    bootstrap:
+      servers: localhost:9092
+  docsUrl: http://localhost:3000
