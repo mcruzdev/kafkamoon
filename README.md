@@ -60,4 +60,4 @@ docker run --rm -it -p 3000:3000 kafkamoon-docs:latest
 
 ## Issues
 
-All project issues can be found [here]().
+All project issues can be found [here](https://github.com/mcruzdev/kafkamoon-api/issues).
