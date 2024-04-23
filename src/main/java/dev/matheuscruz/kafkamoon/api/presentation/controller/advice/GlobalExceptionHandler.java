@@ -15,14 +15,22 @@ import java.net.URI;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-   @Value("${kafkamoon.docsUrl}")
-   private String docsUrl;
+   @Value("${kafkamoon.docs.topic-name-exceeded-limit}")
+   private String docsTopicNameExceededLimitUrl;
+
+   @Value("${kafkamoon.docs.invalid-request}")
+   private String docsInvalidRequestUrl;
+
+
+   @Value("${kafkamoon.docs.topic-with-conflict}")
+   private String docsTopicWithConflictUrl;
+
 
    @ExceptionHandler(TopicExistsException.class)
    public ResponseEntity<ProblemDetail> topicExistsExceptionHandler(final TopicExistsException e) {
       ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
-      problemDetail.setDetail(e.getMessage().concat("."));
-      problemDetail.setType(URI.create("%s/#/reference/api?id=topic-with-conflict".formatted(docsUrl)));
+      problemDetail.setDetail(e.getMessage().concat(".")); // standardize details
+      problemDetail.setType(URI.create(docsTopicWithConflictUrl));
       return ResponseEntity.of(problemDetail).build();
    }
 
@@ -30,14 +38,14 @@ public class GlobalExceptionHandler {
    public ResponseEntity<ProblemDetail> methodArgumentNotValidExceptionHandler(
          final MethodArgumentNotValidException e) {
       ProblemDetail body = e.getBody();
-      body.setType(URI.create("%s/#/reference/api?id=invalid-request".formatted(docsUrl)));
+      body.setType(URI.create(docsInvalidRequestUrl));
       return ResponseEntity.of(body).build();
    }
 
    @ExceptionHandler(TopicNameExceededException.class)
    public ResponseEntity<ProblemDetail> topicNameExceededException(TopicNameExceededException e) {
       ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-      problemDetail.setType(URI.create("%s/#/reference/api?id=topic-name-exceeded-limit".formatted(docsUrl)));
+      problemDetail.setType(URI.create(docsTopicNameExceededLimitUrl));
       problemDetail.setDetail(e.getMessage());
       return ResponseEntity.of(problemDetail).build();
    }
