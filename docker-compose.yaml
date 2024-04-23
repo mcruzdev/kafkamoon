@@ -1,15 +1,23 @@
 ---
 version: '2'
 services:
-#  kafkamoon-api:
-#    image: kafkamoon-api:latest
-#    ports:
-#      - 8080:8080
+  kafkamoon-api:
+    profiles:
+      - "local"
+    image: kafkamoon-api:latest
+    ports:
+      - 8080:8080
   kafkamoon-docs:
+    profiles:
+      - "dev"
+      - "local"
     image: kafkamoon-docs:latest
     ports:
       - 3000:3000
   zookeeper:
+    profiles:
+      - "dev"
+      - "local"
     image: confluentinc/cp-zookeeper:latest
     ports:
       - 2181:2181
@@ -36,6 +44,9 @@ services:
     # See https://rmoff.net/2018/08/02/kafka-listeners-explained/ for details
     # "`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-'"`-._,-
     #
+    profiles:
+      - "dev"
+      - "local"
     image: confluentinc/cp-kafka:latest
     depends_on:
       - zookeeper
