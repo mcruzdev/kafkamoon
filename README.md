@@ -13,6 +13,7 @@ Before all you need to have the following tools on your machine.
 * **Maven:** 3.9.6
 * **docker**
 * **docker-compose**
+* **Makefile**
 
 ### Running the project locally
 
@@ -57,14 +58,6 @@ Execute the container:
 docker run --rm -it -p 3000:3000 kafkamoon-docs:latest
 ```
 
-## How-to guides
+## Issues
 
-See our [how-to guides](how-to/README.md) for getting more contact with Kafkamoon.
-
-## Reference
-
-See our [references](reference/api.md) and [configurations](reference/configurations.md) about the Kafkamoon API.
-
-## Explanation
-
-If you want to see more details about decision and details, [see the explanation](explanation/README.md) section.
+All project issues can be found [here]().
