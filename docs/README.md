@@ -1,70 +1,89 @@
 # Kafkamoon API
 
-Kafkamoon is a Kafka management application, this project aims to demonstrate the integration
-with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) for a hiring test.
+Welcome to Kafkamoon, a Kafka management application. This This project demonstrates integration
+with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) as part of a hiring test.
+
+## Table of Contents
+
+1. [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Running the Project Locally](#running-the-project-locally)
+    - [Running Only the Documentation](#running-only-the-documentation)
+2. [How-to Guides](#how-to-guides)
+3. [References](#references)
+4. [Explanation](#explanation)
 
 ## Getting Started
 
 ### Prerequisites
 
-Before all you need to have the following tools on your machine.
+Before you begin, make sure you have the following tools installed:
 
-* **Java:** 17
-* **Maven:** 3.9.6
-* **docker**
-* **docker-compose**
+- **Java:** Version 17
+- **Maven:** Version 3.9.6
+- **Docker**
+- **Docker Compose**
 
 ### Running the project locally
 
-Clone the project.
+To run the project locally, follow these steps:
+
+1. Clone the repository:
 
 ```shell
 git clone git@github.com:mcruzdev/kafkamoon.git
 ```
 
-Go to the API project directory:
+2. Navigate to the project directory:
 
 ```shell
 cd kafkamoon-api
 ```
 
-Build application with:
+3. Build the application:
 
 ```shell
 make buildAll
 ```
 
-Running the application:
+4. Start the application using Docker Compose:
 
 ```shell
 docker-compose up -d
 ```
 
-* Accessing the [OpenAPI specification](http://localhost:8080/swagger-ui.html) to interact with the API resources.
-* Accessing the [Kafkamoon Documentation](http://localhost:3000)
+After the application is running, you can interact with the following resources:
 
-### Running only the documentation
+* [OpenAPI specification](http://localhost:8080/swagger-ui.html) for exploring and interacting with the API.
+* [Kafkamoon Documentation](http://localhost:3000) for additional information and guidance.
 
-Build the documentation container:
+### Running Only the Documentation
+
+To build and run only the documentation, do the following:
+
+1. Build the documentation container:
 
 ```shell
 make buildDocs
 ```
 
-Execute the container:
+2. Run the container:
 
 ```shell
 docker run --rm -it -p 3000:3000 kafkamoon-docs:latest
 ```
 
+This starts the documentation server on port 3000.
+
 ## How-to guides
 
-See our [how-to guides](how-to/README.md) for getting more contact with Kafkamoon.
+For additional guidance on using Kafkamoon, check out our [how-to guides](how-to/).
 
 ## Reference
 
-See our [references](reference/api.md) and [configurations](reference/configurations.md) about the Kafkamoon API.
+For more detailed information on the Kafkamoon API, refer to our [API references](reference/api.md)
+and [configuration references](reference/configurations.md).
 
 ## Explanation
 
-If you want to see more details about decision and details, [see the explanation](explanation/README.md) section.
+If you're interested in learning about the design decisions and other details of the project, visit the [explanation section](explanation/?id=explanation).
