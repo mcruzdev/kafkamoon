@@ -11,4 +11,4 @@ kafkamoon:
     topic-name-exceeded-limit: ${kafkamoon.docs.url}/#/reference/api?id=topic-name-exceeded-limit
     invalid-request: ${kafkamoon.docs.url}/#/reference/api?id=invalid-request
     topic-with-conflict: ${kafkamoon.docs.url}/#/reference/api?id=topic-with-conflict
-
+    entity-not-found: ${kafkamoon.docs.url}/#/reference/api?id=entity-not-found

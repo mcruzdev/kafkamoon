@@ -27,3 +27,6 @@ length limit.
 
 Explanation to topic name [here](explanation/?id=topic-name).
 
+### Entity not found
+
+This error means that the resource that you are find does not exist.

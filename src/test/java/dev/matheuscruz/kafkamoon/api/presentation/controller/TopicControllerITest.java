@@ -5,8 +5,10 @@ import dev.matheuscruz.kafkamoon.api.Application;
 import dev.matheuscruz.kafkamoon.api.domain.topics.TopicCriticality;
 import dev.matheuscruz.kafkamoon.api.presentation.dto.CreateTopicRequest;
 import dev.matheuscruz.kafkamoon.api.usecases.topics.list.ListTopicsUseCaseOutput;
+import org.apache.kafka.common.Uuid;
 import org.assertj.core.api.SoftAssertions;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -25,6 +27,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
+import java.util.Arrays;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -39,7 +44,8 @@ class TopicControllerITest {
    private static final Logger LOGGER = LoggerFactory.getLogger(TopicControllerITest.class);
 
    @Container
-   static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+   static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1")).withEnv(
+         "DELETE_TOPIC_ENABLED", "true");
 
    @DynamicPropertySource
    static void registryConfig(DynamicPropertyRegistry dynamicPropertyRegistry) {
@@ -246,7 +252,7 @@ class TopicControllerITest {
    }
 
    @Test
-   @DisplayName("Should list topics correctly when page is 0 and size is 0")
+   @DisplayName("Should list topics correctly")
    void shouldReturnEmptyPage() throws Exception {
 
       // arrange
@@ -254,10 +260,10 @@ class TopicControllerITest {
             TopicCriticality.TEST.name());
       String requestBody = mapper.writeValueAsString(request);
 
-      // act
       mockMvc.perform(post("/api/v1/topics").contentType(MediaType.APPLICATION_JSON).content(requestBody)
             .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isCreated());
 
+      // act
       String responseBody = mockMvc.perform(
                   get("/api/v1/topics").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -269,5 +275,54 @@ class TopicControllerITest {
          softly.assertThat(arr).isNotEmpty();
          softly.assertThat(arr).anyMatch(topic -> topic.name().equals("user.payments.payment-created"));
       });
+   }
+
+   @Test
+   @DisplayName("Should delete topic correctly by id")
+   void shouldReturn204NoContentWhenDeleteATopic() throws Exception {
+      // arrange
+      CreateTopicRequest request = new CreateTopicRequest("user", "payments", "payment-refunded",
+            TopicCriticality.TEST.name());
+      String requestBody = mapper.writeValueAsString(request);
+      mockMvc.perform(post("/api/v1/topics").contentType(MediaType.APPLICATION_JSON).content(requestBody)
+            .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isCreated());
+
+      // get all before delete
+      String beforeDeleteBody = mockMvc.perform(
+                  get("/api/v1/topics").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+      ListTopicsUseCaseOutput[] arrBefore = mapper.readValue(beforeDeleteBody, ListTopicsUseCaseOutput[].class);
+      int beforeDelete = arrBefore.length;
+      ListTopicsUseCaseOutput output = Arrays.stream(arrBefore).findFirst().orElseGet(Assertions::fail);
+
+      // act
+      mockMvc.perform(delete("/api/v1/topics/%s".formatted(output.topicId())))
+            .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+      // get all after deleted
+      String afterDeletedBody = mockMvc.perform(
+                  get("/api/v1/topics").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+      ListTopicsUseCaseOutput[] arrAfter = mapper.readValue(afterDeletedBody, ListTopicsUseCaseOutput[].class);
+
+      SoftAssertions.assertSoftly(softly -> {
+         softly.assertThat(beforeDelete).isGreaterThan(arrAfter.length);
+         softly.assertThat(Arrays.stream(arrAfter).map(ListTopicsUseCaseOutput::topicId))
+               .doesNotContain(output.topicId());
+      });
+   }
+
+   @Test
+   @DisplayName("Should return 404 bad request when there is no topic with the provided id")
+   void shouldReturn204NoContentWhenDeleteANonExistentTopic() throws Exception {
+      // arrange
+      String instance = "/api/v1/topics/%s".formatted(Uuid.randomUuid().toString());
+      // act, assert
+      mockMvc.perform(delete(instance)).andExpect(MockMvcResultMatchers.status().isNotFound())
+            .andExpect(jsonPath("$.type", Matchers.containsString("entity-not-found")))
+            .andExpect(jsonPath("$.title", Matchers.is("Not Found")))
+            .andExpect(jsonPath("$.instance", Matchers.containsString(instance)))
+            .andExpect(jsonPath("$.status", Matchers.is(404)))
+            .andExpect(jsonPath("$.detail", Matchers.containsString("This server does not host this topic ID.")));
    }
 }

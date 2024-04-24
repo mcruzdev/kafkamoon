@@ -2,6 +2,7 @@ package dev.matheuscruz.kafkamoon.api.presentation.controller.advice;
 
 import dev.matheuscruz.kafkamoon.api.domain.topics.TopicNameExceededException;
 import org.apache.kafka.common.errors.TopicExistsException;
+import org.apache.kafka.common.errors.UnknownTopicIdException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -25,6 +26,9 @@ public class GlobalExceptionHandler {
    @Value("${kafkamoon.docs.topic-with-conflict}")
    private String docsTopicWithConflictUrl;
 
+   @Value("${kafkamoon.docs.entity-not-found}")
+   private String docsEntityNotFoundUrl;
+
 
    @ExceptionHandler(TopicExistsException.class)
    public ResponseEntity<ProblemDetail> topicExistsExceptionHandler(final TopicExistsException e) {
@@ -46,6 +50,14 @@ public class GlobalExceptionHandler {
    public ResponseEntity<ProblemDetail> topicNameExceededException(TopicNameExceededException e) {
       ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
       problemDetail.setType(URI.create(docsTopicNameExceededLimitUrl));
+      problemDetail.setDetail(e.getMessage());
+      return ResponseEntity.of(problemDetail).build();
+   }
+
+   @ExceptionHandler(UnknownTopicIdException.class)
+   public ResponseEntity<ProblemDetail> unknownTopicIdException(UnknownTopicIdException e) {
+      ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+      problemDetail.setType(URI.create(docsEntityNotFoundUrl));
       problemDetail.setDetail(e.getMessage());
       return ResponseEntity.of(problemDetail).build();
    }
