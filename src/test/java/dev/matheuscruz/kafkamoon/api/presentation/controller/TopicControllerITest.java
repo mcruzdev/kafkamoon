@@ -1,7 +1,6 @@
 package dev.matheuscruz.kafkamoon.api.presentation.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.matheuscruz.kafkamoon.api.Application;
 import dev.matheuscruz.kafkamoon.api.domain.topics.TopicCriticality;
 import dev.matheuscruz.kafkamoon.api.presentation.dto.CreateTopicRequest;
 import dev.matheuscruz.kafkamoon.api.usecases.topics.list.ListTopicsUseCaseOutput;
@@ -14,17 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 import java.util.Arrays;
@@ -35,22 +30,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
-@TestPropertySource(locations = { "classpath:application-it.yaml" })
-@Testcontainers
-class TopicControllerITest {
+class TopicControllerITest extends AbstractBaseITest {
 
    private static final Logger LOGGER = LoggerFactory.getLogger(TopicControllerITest.class);
 
    @Container
-   static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1")).withEnv(
-         "DELETE_TOPIC_ENABLED", "true");
+   static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
 
    @DynamicPropertySource
    static void registryConfig(DynamicPropertyRegistry dynamicPropertyRegistry) {
       dynamicPropertyRegistry.add("kafkamoon.kafka.bootstrap.servers", () -> {
-         LOGGER.info("[env:it] Using kafkamoon.kafka.bootstrap.servers={}", kafka.getBootstrapServers());
+         LOGGER.info("[profile:it] Using kafkamoon.kafka.bootstrap.servers={}", kafka.getBootstrapServers());
          return kafka.getBootstrapServers();
       });
    }
