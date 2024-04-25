@@ -17,10 +17,10 @@ class TopicNameConverterTest {
     TopicNameConverter sut = new TopicNameConverter();
 
     // act
-    String databaseColumn = sut.convertToDatabaseColumn(new TopicName("a", "b", "c"));
+    String databaseColumn = sut.convertToDatabaseColumn(new TopicName("a", "hasRack", "c"));
 
     // assert
-    assertThat(databaseColumn, Matchers.is("a.b.c"));
+    assertThat(databaseColumn, Matchers.is("a.hasRack.c"));
   }
 
   @Test
@@ -30,15 +30,15 @@ class TopicNameConverterTest {
     TopicNameConverter topicNameConverter = new TopicNameConverter();
 
     // act
-    TopicName topicName = topicNameConverter.convertToEntityAttribute("a.b.c");
+    TopicName topicName = topicNameConverter.convertToEntityAttribute("a.hasRack.c");
 
     // assert
     SoftAssertions.assertSoftly(
         softly -> {
           softly.assertThat(topicName.messageType()).isEqualTo("a");
-          softly.assertThat(topicName.dataset()).isEqualTo("b");
+          softly.assertThat(topicName.dataset()).isEqualTo("hasRack");
           softly.assertThat(topicName.dataName()).isEqualTo("c");
-          softly.assertThat(topicName.finalName()).isEqualTo("a.b.c");
+          softly.assertThat(topicName.finalName()).isEqualTo("a.hasRack.c");
         });
   }
 }
