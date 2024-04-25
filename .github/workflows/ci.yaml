@@ -3,7 +3,7 @@ name: Kafkamoon Continuous Integration
 on: push
 
 jobs:
-  formatter:
+  ci:
     runs-on: ubuntu-latest
     name:  Run CI pipeline
     steps:
@@ -19,3 +19,28 @@ jobs:
         run: mvn -f pom.xml clean test
       - name: Run mvn clean package -DskipTests
         run: mvn -f pom.xml clean package
+      - name: Configure AWS Credentials
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Get tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+      - name: Login to Amazon ECR
+        if: startsWith(github.ref, 'refs/tags/v')
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build Image
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: docker build -f src/main/docker/Dockerfile.legacy-jar -t $ECR_REGISTRY/kafkamoon-api:${{steps.tag.outputs.tag}} .
+      - name: Publish Image
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: docker push $ECR_REGISTRY/kafkamoon-api:${{steps.tag.outputs.tag}}
