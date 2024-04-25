@@ -12,6 +12,7 @@ with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) as part of a 
 2. [How-to Guides](#how-to-guides)
 3. [References](#references)
 4. [Explanation](#explanation)
+5. [Continuous Integration](#continuous-integration)
 
 ## Getting Started
 
@@ -110,3 +111,9 @@ and [configuration references](reference/configurations.md).
 ## Explanation
 
 If you're interested in learning about the design decisions and other details of the project, visit the [explanation section](explanation/?id=explanation).
+
+## Continuous Integration
+
+The Continuous Integration (CI) pipeline contains all necessary configuration to maintain the standardization on the project through spotless maven plugin.
+
+[!NOTE] If yo

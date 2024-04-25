@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeleteTopicUseCase {
 
-   private final KafkaClient kafkaClient;
+  private final KafkaClient kafkaClient;
 
-   public DeleteTopicUseCase(KafkaClient kafkaClient) {
-      this.kafkaClient = kafkaClient;
-   }
+  public DeleteTopicUseCase(KafkaClient kafkaClient) {
+    this.kafkaClient = kafkaClient;
+  }
 
-   public void execute(String topicUUid) {
-      this.kafkaClient.deleteTopic(topicUUid);
-   }
+  public void execute(String topicUUid) {
+    this.kafkaClient.deleteTopic(topicUUid);
+  }
 }

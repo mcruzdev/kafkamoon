@@ -1,14 +1,13 @@
 package dev.matheuscruz.kafkamoon.api.infrastructure.kafka;
 
+import java.util.Collection;
 import org.apache.kafka.clients.admin.Config;
 import org.apache.kafka.clients.admin.TopicListing;
 
-import java.util.Collection;
-
 public interface KafkaClient {
-   Config createTopic(String topicName, Integer partitions, Short replicationFactor);
+  Config createTopic(String topicName, Integer partitions, Short replicationFactor);
 
-   Collection<TopicListing> listTopics();
+  Collection<TopicListing> listTopics();
 
-   void deleteTopic(String topicUUid);
+  void deleteTopic(String topicUUid);
 }
