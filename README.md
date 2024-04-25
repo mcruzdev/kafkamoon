@@ -116,4 +116,4 @@ If you're interested in learning about the design decisions and other details of
 
 The Continuous Integration (CI) pipeline contains all necessary configuration to maintain the standardization on the project through spotless maven plugin.
 
-[!NOTE] If yo
+

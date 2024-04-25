@@ -5,7 +5,7 @@ on: push
 jobs:
   formatter:
     runs-on: ubuntu-latest
-    name:  Run spotless:check
+    name:  Run CI pipeline
     steps:
       - uses: actions/checkout@v4
       - name: Setup Java 17
@@ -14,7 +14,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - name: Check formatter
-        run: mvn -f pom.xml verify -DskipTests
+        run: mvn -f pom.xml spotless:check
       - name: Run mvn clean test
         run: mvn -f pom.xml clean test
       - name: Run mvn clean package -DskipTests
