@@ -21,7 +21,7 @@ public class KafkaClientConfiguration {
   @Bean
   public KafkaClient kafkaClient() {
     LOGGER.info(
-        "[flow:startup.config] Createing KafkaClient bean with bootstrap.servers as {}",
+        "[flow:startup.config] Creating KafkaClient bean with bootstrap.servers as {}",
         bootstrapServers);
     Properties props = new Properties();
     props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);

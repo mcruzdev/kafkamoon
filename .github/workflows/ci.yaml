@@ -15,9 +15,9 @@ jobs:
           java-version: '17'
       - name: Check formatter
         run: mvn -f pom.xml spotless:check
-      - name: Run mvn clean test
+      - name: Test
         run: mvn -f pom.xml clean test
-      - name: Run mvn clean package -DskipTests
+      - name: Package application
         run: mvn -f pom.xml clean package
       - name: Configure AWS Credentials
         if: startsWith(github.ref, 'refs/tags/v')

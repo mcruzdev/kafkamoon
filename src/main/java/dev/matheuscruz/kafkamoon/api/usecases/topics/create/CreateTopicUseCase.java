@@ -5,7 +5,6 @@ import dev.matheuscruz.kafkamoon.api.domain.topics.TopicCriticality;
 import dev.matheuscruz.kafkamoon.api.domain.topics.TopicName;
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
 import java.util.Locale;
-import org.apache.kafka.clients.admin.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -37,12 +36,14 @@ public class CreateTopicUseCase {
         criticality.getPartitions(),
         criticality.getReplicationFactor());
 
-    Config config =
+    String topicId =
         this.kafkaClient.createTopic(
             topicName.finalName(), criticality.getPartitions(), criticality.getReplicationFactor());
-    LOGGER.info("[flow:create.topic] Config from topic {} is {}", topicName, config);
+    LOGGER.info(
+        "[flow:create.topic][status:success] Topic with name '{}' has the id '{}'",
+        topicName,
+        topicId);
 
-    return new CreateTopicUseCaseOutput(
-        topic.getName().finalName(), topic.getId(), topic.getCreatedAt());
+    return new CreateTopicUseCaseOutput(topic.getName().finalName(), topicId, topic.getCreatedAt());
   }
 }
