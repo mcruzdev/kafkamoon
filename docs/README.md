@@ -49,7 +49,7 @@ make buildAll
 4. Start the application using Docker Compose:
 
 ```shell
-docker-compose up -d
+docker-compose --profile local up -d
 ```
 
 After the application is running, you can interact with the following resources:
