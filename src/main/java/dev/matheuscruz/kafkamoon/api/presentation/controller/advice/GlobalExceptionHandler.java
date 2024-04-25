@@ -1,6 +1,7 @@
 package dev.matheuscruz.kafkamoon.api.presentation.controller.advice;
 
 import dev.matheuscruz.kafkamoon.api.domain.topics.TopicNameExceededException;
+import java.net.URI;
 import org.apache.kafka.common.errors.TopicExistsException;
 import org.apache.kafka.common.errors.UnknownTopicIdException;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,55 +12,50 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.net.URI;
-
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-   @Value("${kafkamoon.docs.topic-name-exceeded-limit}")
-   private String docsTopicNameExceededLimitUrl;
+  @Value("${kafkamoon.docs.topic-name-exceeded-limit}")
+  private String docsTopicNameExceededLimitUrl;
 
-   @Value("${kafkamoon.docs.invalid-request}")
-   private String docsInvalidRequestUrl;
+  @Value("${kafkamoon.docs.invalid-request}")
+  private String docsInvalidRequestUrl;
 
+  @Value("${kafkamoon.docs.topic-with-conflict}")
+  private String docsTopicWithConflictUrl;
 
-   @Value("${kafkamoon.docs.topic-with-conflict}")
-   private String docsTopicWithConflictUrl;
+  @Value("${kafkamoon.docs.entity-not-found}")
+  private String docsEntityNotFoundUrl;
 
-   @Value("${kafkamoon.docs.entity-not-found}")
-   private String docsEntityNotFoundUrl;
+  @ExceptionHandler(TopicExistsException.class)
+  public ResponseEntity<ProblemDetail> topicExistsExceptionHandler(final TopicExistsException e) {
+    ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+    problemDetail.setDetail(e.getMessage().concat(".")); // standardize details
+    problemDetail.setType(URI.create(docsTopicWithConflictUrl));
+    return ResponseEntity.of(problemDetail).build();
+  }
 
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ProblemDetail> methodArgumentNotValidExceptionHandler(
+      final MethodArgumentNotValidException e) {
+    ProblemDetail body = e.getBody();
+    body.setType(URI.create(docsInvalidRequestUrl));
+    return ResponseEntity.of(body).build();
+  }
 
-   @ExceptionHandler(TopicExistsException.class)
-   public ResponseEntity<ProblemDetail> topicExistsExceptionHandler(final TopicExistsException e) {
-      ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.CONFLICT);
-      problemDetail.setDetail(e.getMessage().concat(".")); // standardize details
-      problemDetail.setType(URI.create(docsTopicWithConflictUrl));
-      return ResponseEntity.of(problemDetail).build();
-   }
+  @ExceptionHandler(TopicNameExceededException.class)
+  public ResponseEntity<ProblemDetail> topicNameExceededException(TopicNameExceededException e) {
+    ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+    problemDetail.setType(URI.create(docsTopicNameExceededLimitUrl));
+    problemDetail.setDetail(e.getMessage());
+    return ResponseEntity.of(problemDetail).build();
+  }
 
-   @ExceptionHandler(MethodArgumentNotValidException.class)
-   public ResponseEntity<ProblemDetail> methodArgumentNotValidExceptionHandler(
-         final MethodArgumentNotValidException e) {
-      ProblemDetail body = e.getBody();
-      body.setType(URI.create(docsInvalidRequestUrl));
-      return ResponseEntity.of(body).build();
-   }
-
-   @ExceptionHandler(TopicNameExceededException.class)
-   public ResponseEntity<ProblemDetail> topicNameExceededException(TopicNameExceededException e) {
-      ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-      problemDetail.setType(URI.create(docsTopicNameExceededLimitUrl));
-      problemDetail.setDetail(e.getMessage());
-      return ResponseEntity.of(problemDetail).build();
-   }
-
-   @ExceptionHandler(UnknownTopicIdException.class)
-   public ResponseEntity<ProblemDetail> unknownTopicIdException(UnknownTopicIdException e) {
-      ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-      problemDetail.setType(URI.create(docsEntityNotFoundUrl));
-      problemDetail.setDetail(e.getMessage());
-      return ResponseEntity.of(problemDetail).build();
-   }
-
+  @ExceptionHandler(UnknownTopicIdException.class)
+  public ResponseEntity<ProblemDetail> unknownTopicIdException(UnknownTopicIdException e) {
+    ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
+    problemDetail.setType(URI.create(docsEntityNotFoundUrl));
+    problemDetail.setDetail(e.getMessage());
+    return ResponseEntity.of(problemDetail).build();
+  }
 }

@@ -1,0 +1,21 @@
+name: Kafkamoon Continuous Integration
+
+on: push
+
+jobs:
+  formatter:
+    runs-on: ubuntu-latest
+    name:  Run CI pipeline
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Check formatter
+        run: mvn -f pom.xml spotless:check
+      - name: Run mvn clean test
+        run: mvn -f pom.xml clean test
+      - name: Run mvn clean package -DskipTests
+        run: mvn -f pom.xml clean package
