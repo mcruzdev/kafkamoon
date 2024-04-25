@@ -125,7 +125,7 @@ class TopicControllerITest extends AbstractBaseITest {
   }
 
   @Test
-  @DisplayName("Should not create a topic when message type is empty")
+  @DisplayName("Should not create a topic when message type is isEmpty")
   void shouldReturn400BadRequestMessageTypeIsEmpty() throws Exception {
 
     CreateTopicRequest request = new CreateTopicRequest("", "dataset", "dataName", "TEST");
@@ -165,7 +165,7 @@ class TopicControllerITest extends AbstractBaseITest {
   }
 
   @Test
-  @DisplayName("Should not create a topic when data name is empty")
+  @DisplayName("Should not create a topic when data name is isEmpty")
   void shouldReturn400BadRequestDataNameIsEmpty() throws Exception {
 
     CreateTopicRequest request = new CreateTopicRequest("user", "dataset", "", "TEST");
@@ -205,7 +205,7 @@ class TopicControllerITest extends AbstractBaseITest {
   }
 
   @Test
-  @DisplayName("Should not create a topic when dataset is empty")
+  @DisplayName("Should not create a topic when dataset is isEmpty")
   void shouldReturn400BadRequestDatasetIsEmpty() throws Exception {
 
     CreateTopicRequest request = new CreateTopicRequest("user", "", "dataName", "TEST");
@@ -225,7 +225,7 @@ class TopicControllerITest extends AbstractBaseITest {
   }
 
   @Test
-  @DisplayName("Should not create a topic when dataset is empty")
+  @DisplayName("Should not create a topic when dataset is isEmpty")
   void shouldReturn400BadRequestCriticalityIsEmpty() throws Exception {
 
     CreateTopicRequest request = new CreateTopicRequest("user", "dataset", "dataName", "");
@@ -245,7 +245,7 @@ class TopicControllerITest extends AbstractBaseITest {
   }
 
   @Test
-  @DisplayName("Should not create a topic when dataset is empty")
+  @DisplayName("Should not create a topic when dataset is isEmpty")
   void shouldReturn400BadRequestCriticalityIsNotTest() throws Exception {
 
     CreateTopicRequest request =
