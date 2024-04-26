@@ -13,6 +13,7 @@ with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) as part of a 
 3. [References](#references)
 4. [Explanation](#explanation)
 5. [Continuous Integration](#continuous-integration)
+6. [Terraform GitOps](#terraform-gitops)
 
 ## Getting Started
 
@@ -130,7 +131,8 @@ The `Terraform GitOps Plan` workflow sends a comment describing the output gener
 
 The `terraform apply` happens when is made a push on `main` branch.
 
->[!IMPORTANT] Is very important to configure a Branch protection rule to avoid mistakes!
+> [!IMPORTANT]
+> Is very important to configure a branch protection rule to evict mistakes.
 
 ### How it was configured?
 
