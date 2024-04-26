@@ -1,0 +1,52 @@
+name: Terraform GitOps Plan
+
+on:
+  pull_request:
+    paths:
+      - "terraform-gitops/**"
+env:
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    name: Run Terraform pipeline
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.1.7"
+      - name: Terraform init
+        run: terraform -chdir=terraform-gitops init
+      - name: Terraform plan
+        id: plan
+        run: terraform -chdir=terraform-gitops plan -no-color
+
+      - name: Terraform plan output
+        id: comment
+        uses: actions/github-script@v6
+        env:
+          PLAN: "${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Initialization ⚙️
+            #### Terraform Plan 📖 \`${{ steps.plan.outcome }}\`
+            
+            \`\`\`
+            ${process.env.PLAN}
+            \`\`\`
+            
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
