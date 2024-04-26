@@ -2,9 +2,8 @@ name: Kafkamoon Continuous Integration
 
 on:
   push:
-  pull_request:
-    paths:
-      - "!terraform-gitops/**"
+    paths-ignore:
+      - "terraform-gitops/**"
 jobs:
   ci:
     runs-on: ubuntu-latest
