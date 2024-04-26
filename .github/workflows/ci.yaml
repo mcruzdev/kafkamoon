@@ -40,7 +40,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: docker build -f src/main/docker/Dockerfile.legacy-jar -t $ECR_REGISTRY/kafkamoon-api:${{steps.tag.outputs.tag}} .
+        run: docker build -f src/main/docker/Dockerfile -t $ECR_REGISTRY/kafkamoon-api:${{steps.tag.outputs.tag}} .
       - name: Publish Image
         if: startsWith(github.ref, 'refs/tags/v')
         env:
