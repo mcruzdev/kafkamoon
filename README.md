@@ -14,7 +14,7 @@ with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) as part of a 
 4. [Explanation](#explanation)
 5. [Continuous Integration](#continuous-integration)
 6. [Terraform GitOps](#terraform-gitops)
-
+7. [Accessing the Kubernetes Cluster](#accessing-eks)
 ## Getting Started
 
 ### Prerequisites
@@ -143,4 +143,19 @@ Was necessary do some steps:
 ![img_1.png](img_1.png)
 3. Allow permissions for workflows to create comments on pull requests;
 ![img.png](img.png)
+
+## Configuring Kubernetes Cluster
+
+1. Update the local kubeconfig
+
+```shell
+aws eks update-kubeconfig --name platformoon-kafkamoon ${CLUSTER_NAME} --region ${AWS_REGION}
+```
+
+2. Add ArgoCD
+
+```shell
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
 
