@@ -10,13 +10,13 @@ this [blogpost](https://cnr.sh/essays/how-paint-bike-shed-kafka-topic-naming-con
 The topic name is divided into three parts: **message type**, **dataset** name and **data name**.
 
 * **Message type** - Indicates the type of the message, that can have the following values:
-    * logging
-    * queuing
-    * tracking
-    * etl/db
-    * streaming
-    * push
-    * user
+    * `logging`
+    * `queuing`
+    * `tracking`
+    * `etl/db`
+    * `streaming`
+    * `push`
+    * `user`
 * **Dataset name** - Is analogous to a database name in traditional RDBMS systems. It's used as a category to group topics
   together.
 * **Data name** - Is analogous to a table name in traditional RDBMS systems though it’s fine to include further dotted
@@ -34,6 +34,8 @@ An example of topic name where we can log an event that occurred on **store** wh
 By default, the Kafkamoon API concatenates these fields to create the final topic name, resulting in `queuing.store.package-receive`.
 
 !> **IMPORTANT**: The maximum topic name length allowed is 255 characters. This means that the combined length of the message type, dataset name, and data name must not exceed 252 characters, leaving room for additional separators (`.`).
+
+!> **IMPORTANT**: The API does not validate the `message type` (this is just a proposed idea).
 
 ## Criticality
 

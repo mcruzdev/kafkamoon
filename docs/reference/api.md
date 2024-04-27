@@ -29,7 +29,7 @@ exceeds the maximum length allowed.
 
 ### Entity not found
 
-This error means that the resource that you are find does not exist.
+This error indicates that the resource you're looking for does not exist.
 
 ### Kafka communication failure
 
@@ -48,4 +48,4 @@ kafkamoon.kafka.request.timeout.seconds=2
 
 - Kafka is down (or bad configurable)
 
-You need to verify if the Kafka cluster is up and be sure that is listening on the same port configured by Kafkamoon.
+You need to verify if the Kafka cluster is up and be sure that is listening on the same port configured by Kafkamoon API.
