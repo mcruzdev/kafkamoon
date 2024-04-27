@@ -4,6 +4,11 @@ spring:
 
 kafkamoon:
   kafka:
+    retries: 0
+    default:
+      api:
+        timeout:
+          ms: 2000
     bootstrap:
       servers: ${KAFKA_BOOTSTRAP_SERVERS:http://localhost:9092}
   docs:

@@ -3,7 +3,61 @@ info:
   title: Kafkamoon API
   version: 1.0.0
 paths:
-  "/api/v1/topics/{topicId}":
+  "/api/v1/cluster/nodes":
+    get:
+      description: Get Kafka nodes
+      responses:
+        "200":
+          description: Ok
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/GetClusterNodesResponse"
+        "502":
+          description: "Bad Gateway"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  "/api/v1/cluster/info":
+    get:
+      description: Get Kafka cluster info
+      responses:
+        "200":
+          description: Ok
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/GetClusterInfoResponse"
+        "502":
+          description: "Bad Gateway"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+  "/api/v1/topics/{id}":
+    get:
+      description: Get topic on Kafka Cluster by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: "p8fFEbKGQ22B6M_Da_vCBw"
+      responses:
+        "200":
+          description: Ok
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/GetTopicByIdResponse"
+        "502":
+          description: "Bad Gateway"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
     delete:
       description: Delete topic on Kafka Cluster
       parameters:
@@ -16,6 +70,12 @@ paths:
       responses:
         "204":
           description: No Content
+        "502":
+          description: "Bad Gateway"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
   "/api/v1/topics":
     get:
       description: Get topics from Kafka Cluster
@@ -26,6 +86,12 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/GetTopicsResponse"
+        "502":
+          description: "Bad Gateway"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
     post:
       description: Create topic on Kafka Cluster
       requestBody:
@@ -64,8 +130,100 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
+        "502":
+          description: "Bad Gateway"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
 components:
   schemas:
+    GetClusterNodesResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/ClusterNodeResponse"
+    ClusterNodeResponse:
+      type: object
+      properties:
+        id: 
+          type: string
+          example: "1"
+        host:
+          type: string
+          example: "localhost"
+        port:
+          type: integer
+          example: 9092
+        hasRack:
+          type: boolean
+          example: false
+        rack: 
+          type: string
+          example: "rack"
+        isEmpty:
+          type: boolean
+          example: false
+        quantityOfTopics:
+          type: integer
+          example: 1
+    GetClusterInfoResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1"
+        host:
+          type: string
+          example: "localhost"
+        hasRack:
+          type: boolean
+          example: false
+        port:
+          type: integer
+          example: 9092
+        isEmpty:
+          type: boolean
+          example: false
+    GetTopicByIdResponse:
+      type: object
+      properties:
+        name: 
+          type: string
+          example: "user.payments.payment-received"
+        id:
+          type: string
+          example: "p8fFEbKGQ22B6M_Da_vCBw"
+        partitionInfos:
+          type: array
+          items:
+            $ref: "#/components/schemas/PartitionInfo"
+    PartitionInfo:
+      type: object
+      properties:
+        partition:
+          type: integer
+          example: 0
+        leader:
+          type: object
+          properties:
+            id: 
+              type: string
+              example: 1
+            host:
+              type: string
+              example: "localhost"
+            hasRack:
+              type: boolean
+              example: false
+            port:
+              type: integer
+              example: 9092
+            isEmpty:
+              type: boolean
+              example: false
+        replicas:
+          type: array
+          example: []
     GetTopicResponse:
       type: object
       properties:

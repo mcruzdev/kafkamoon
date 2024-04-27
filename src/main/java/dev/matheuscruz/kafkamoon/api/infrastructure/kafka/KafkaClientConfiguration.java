@@ -1,9 +1,5 @@
-package dev.matheuscruz.kafkamoon.api.infrastructure.config;
+package dev.matheuscruz.kafkamoon.api.infrastructure.kafka;
 
-import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.DefaultKafkaClient;
-import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
-
-import java.time.Duration;
 import java.util.Properties;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -21,11 +17,11 @@ public class KafkaClientConfiguration {
    @Value("${kafkamoon.kafka.bootstrap.servers}")
    private String bootstrapServers;
 
-   @Value("${kafkamoon.kafka.retries:0}")
+   @Value("${kafkamoon.kafka.retries}")
    private Integer kafkaClientRetries;
 
-   @Value("${kafkamoon.kafka.request.timeout.seconds:5}")
-   private Integer kafkaRequestTimeoutSeconds;
+   @Value("${kafkamoon.kafka.default.api.timeout.ms}")
+   private Integer kafkaDefaultApiTimeoutMs;
 
    @Value("${spring.application.name}")
    private String applicationName;
@@ -35,12 +31,11 @@ public class KafkaClientConfiguration {
    public KafkaClient kafkaClient() {
       LOGGER.info("[flow:startup.config] Creating KafkaClient bean with bootstrap.servers as {}", bootstrapServers);
       Properties props = new Properties();
-      int timeoutMs = (int) Duration.ofSeconds(kafkaRequestTimeoutSeconds).toMillis();
       props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-      props.put("request.timeout.ms", timeoutMs);
       props.put("retries", kafkaClientRetries);
       props.put("client.id", applicationName);
-      props.put("default.api.timeout.ms", timeoutMs);
+      props.put("default.api.timeout.ms", kafkaDefaultApiTimeoutMs);
+      props.put("request.timeout.ms", kafkaDefaultApiTimeoutMs);
       return new DefaultKafkaClient(props);
    }
 }

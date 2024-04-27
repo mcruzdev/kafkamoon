@@ -9,6 +9,7 @@ import dev.matheuscruz.kafkamoon.api.application.usecases.topics.get.GetTopicByN
 import dev.matheuscruz.kafkamoon.api.application.usecases.topics.list.ListTopicsUseCase;
 import dev.matheuscruz.kafkamoon.api.application.usecases.topics.list.ListTopicsUseCaseOutput;
 import dev.matheuscruz.kafkamoon.api.presentation.dto.CreateTopicRequest;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Hidden
 @RequestMapping("/api/v1/topics")
 @RestController
 public class TopicController {

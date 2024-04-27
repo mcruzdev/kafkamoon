@@ -22,6 +22,7 @@ with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) as part of a 
     - [How it was configured?](#how-it-was-configured)
   - [Configuring Kubernetes Cluster](#configuring-kubernetes-cluster)
   - [Observabilty](#observabilty)
+  - [Final Consideration](#final-considerations)
 ## Getting Started
 
 ### Prerequisites
@@ -199,3 +200,23 @@ kubectl create secret docker-registry regcred \
 Grafana Dashboards:
 
 [SpringBoot Observability](https://grafana.com/grafana/dashboards/11378-justai-system-monitor/)
+
+## Considerações finais
+
+Antes de tudo gostaria de agradecer pelo desafio, foi muito interessante e sem dúvidas desafiante. Eu fiz essa solução tentando trazer
+uma abordagem mais próxima possível mundo real, trazendo documentação para o usuário da API, observabilidade e uma boa interface para que 
+for consumir a API.
+
+### O que gostaria de ter feito se tivesse mais tempo
+
+Quero pontuar algumas coisas que eu gostaria de ter feito se tivesse mais tempo:
+
+- Adicionar segurança na API através de OAuth2 utilizando Keycloak;
+- Adicionar auditoria para saber:
+  - Quem criou um tópico;
+  - Quem deletou um tópic;
+- Adicionar os endpoint para listagem de consumer groups;
+- Resetar offset de consumidores para um ponto específico no tempo ou offset;
+- Adicionar dashboard para monitorar o Kafka;
+- Adicionar alertas tanto para o Kafka, quanto para a aplicação;
+- Permitir a visualiação de Tracing e Logs;
