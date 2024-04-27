@@ -40,11 +40,12 @@ public class TopicController {
   public TopicController(
       CreateTopicUseCase createTopicUseCase,
       ListTopicsUseCase listTopicsUseCase,
-      DeleteTopicUseCase deleteTopicUseCase, GetTopicByIdUseCase getTopicByIdUseCase) {
+      DeleteTopicUseCase deleteTopicUseCase,
+      GetTopicByIdUseCase getTopicByIdUseCase) {
     this.createTopicUseCase = createTopicUseCase;
     this.listTopicsUseCase = listTopicsUseCase;
     this.deleteTopicUseCase = deleteTopicUseCase;
-     this.getTopicByIdUseCase = getTopicByIdUseCase;
+    this.getTopicByIdUseCase = getTopicByIdUseCase;
   }
 
   @PostMapping
@@ -72,14 +73,14 @@ public class TopicController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable("id") @NotNull @NotBlank String topicId) {
-    LOGGER.info(
-        "[flow:delete.topic] Receiving HTTP request to delete topic with id {}", topicId);
+    LOGGER.info("[flow:delete.topic] Receiving HTTP request to delete topic with id {}", topicId);
     this.deleteTopicUseCase.execute(topicId);
     return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/{id}")
-  public GetTopicByNameUseCaseOutput getById(@PathVariable("id") @NotNull @NotBlank String topicId) {
+  public GetTopicByNameUseCaseOutput getById(
+      @PathVariable("id") @NotNull @NotBlank String topicId) {
     return this.getTopicByIdUseCase.execute(topicId);
   }
 }

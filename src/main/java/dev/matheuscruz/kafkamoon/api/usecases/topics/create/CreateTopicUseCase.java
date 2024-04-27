@@ -49,7 +49,7 @@ public class CreateTopicUseCase {
         "[flow:create.topic][status:success] Topic with name '{}' has the id '{}'",
         topicName,
         topicId);
-    
+
     Counter.builder("kafkamoon-api.create.topic")
         .tag("status", "success")
         .register(meterRegistry)
