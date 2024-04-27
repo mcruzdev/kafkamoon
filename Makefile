@@ -13,3 +13,22 @@ buildApp:
 buildAll: buildApp buildDocs
 .PHONY: buildAll
 
+helmUpdate:
+	helm dependency update helm 
+.PHONY: helmUpdate
+
+helmPkg:
+	helm package helm
+.PHONY: helmPkg
+
+helmInstall:
+	helm install kafkamoon kafkamoon-0.1.0.tgz
+.PHONY: helmInstall
+
+helmDestroy:
+	helm uninstall kafkamoon
+.PHONY: helmDestroy
+
+cleanK8s:
+	kubectl delete pvc --all
+.PHONY: cleanK8s

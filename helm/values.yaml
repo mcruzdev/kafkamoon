@@ -1,0 +1,51 @@
+kafkamoon:
+  port: 8080
+  image: docker.io/matheuscruzdev/kafkamoon-api:latest
+
+grafana-operator:
+    commonLabels:
+      dashboards: "grafana"
+
+# bitnami/kafka configuration
+kafka:
+  listeners:
+    client:
+      protocol: PLAINTEXT
+    controller:
+      protocol: PLAINTEXT
+    interbroker:
+      protocol: PLAINTEXT
+  metrics:
+    zookeeper:
+      metrics: 
+        enabled: true
+    kafka:
+      enabled: true
+    jmx:
+      enabled: true
+
+prometheus:
+  server:
+    configuration: |
+      scrape_configs:
+        - job_name: 'kafkamoon-api-metrics'
+          metrics_path: '/actuator/prometheus'
+          scrape_interval: 5s
+          static_configs:
+            - targets:  ['kafkamoon-api.default.svc.cluster.local:80']
+              labels: 
+                application: 'kafkamoon-api'
+        - job_name: 'kafkamoon-kafka-jmx'
+          metrics_path: '/metrics'
+          scrape_interval: 5s
+          static_configs:
+            - targets: ['kafkamoon-jmx-metrics.default.svc.cluster.local:5556']
+              labels:
+                application: 'kafka-jmx'
+        - job_name: 'kafkamoon-kafka'
+          metrics_path: '/metrics'
+          scrape_interval: 5s
+          static_configs:
+            - targets: ['kafkamoon-metrics.default.svc.cluster.local:9308']
+              labels:
+                application: 'kafka'

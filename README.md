@@ -5,16 +5,23 @@ with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) as part of a 
 
 ## Table of Contents
 
-1. [Getting Started](#getting-started)
+- [Kafkamoon API](#kafkamoon-api)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
-    - [Running the Project Locally](#running-the-project-locally)
+    - [Running the project locally](#running-the-project-locally)
+    - [Running the project locally on Kubernetes](#running-the-project-locally-on-kubernetes)
     - [Running Only the Documentation](#running-only-the-documentation)
-2. [How-to Guides](#how-to-guides)
-3. [References](#references)
-4. [Explanation](#explanation)
-5. [Continuous Integration](#continuous-integration)
-6. [Terraform GitOps](#terraform-gitops)
-7. [Accessing the Kubernetes Cluster](#accessing-eks)
+  - [How-to guides](#how-to-guides)
+  - [Reference](#reference)
+  - [Explanation](#explanation)
+  - [Continuous Integration](#continuous-integration)
+  - [Terraform GitOps](#terraform-gitops)
+    - [How it works?](#how-it-works)
+    - [When is `terraform apply` happens?](#when-is-terraform-apply-happens)
+    - [How it was configured?](#how-it-was-configured)
+  - [Configuring Kubernetes Cluster](#configuring-kubernetes-cluster)
+  - [Observabilty](#observabilty)
 ## Getting Started
 
 ### Prerequisites
@@ -67,7 +74,7 @@ To run the project locally on Kubernetes, follow these steps:
 1. Create the Kubernetes cluster:
 
 ```shell
-kind create cluster --name local --config=k8s/kind-cluster.yaml
+kind create cluster --name local --config=kind/kind-cluster.yaml
 ```
 
 2. Configure the context:
@@ -76,10 +83,34 @@ kind create cluster --name local --config=k8s/kind-cluster.yaml
 kubectl cluster-info --context kind-local
 ```
 
-3. Apply kubernetes manifests:
+3. Update Helm dependencies
 
 ```shell
-kubectl apply -f k8s/manifests
+make helmUpdate
+```
+
+4. Package Helm
+
+```shell
+make helmPkg
+```
+
+5. Install Nginx Ingress Controller
+
+```shell
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/release-1.8/deploy/static/provider/kind/deploy.yaml
+```
+
+5. Install **Kafkamoon** application with Helm:
+
+```shell
+make helmInstall
+```
+
+6. Get Grafana admin to access Grafana Dashboards
+
+```shell
+kubectl get secret kafkamoon-grafana-operator-grafana-admin-credentials -o json | jq '.data.GF_SECURITY_ADMIN_PASSWORD'
 ```
 
 ### Running Only the Documentation
@@ -140,22 +171,31 @@ Was necessary do some steps:
 
 1. Create a IAM user on AWS with access key and secret key;
 2. Configure access key, secret key and region on Github for this repository;
-![img_1.png](img_1.png)
+![configure-credentials.png](assets/configure-credentials.png)
 3. Allow permissions for workflows to create comments on pull requests;
-![img.png](img.png)
+![allow-write-permissions.png](assets/allow-write-permissions.png)
 
 ## Configuring Kubernetes Cluster
 
 1. Update the local kubeconfig
 
 ```shell
-aws eks update-kubeconfig --name platformoon-kafkamoon ${CLUSTER_NAME} --region ${AWS_REGION}
+aws eks update-kubeconfig --name ${CLUSTER_NAME} --region ${AWS_REGION}
 ```
 
-2. Add ArgoCD
+3. Create a namespace for kafkamoon
+Create a secret for pull private repositories
 
 ```shell
-kubectl create namespace argocd
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl create secret docker-registry regcred \
+  --docker-server=${AWS_ACCOUNT}.dkr.ecr.${AWS_REGION}.amazonaws.com \
+  --docker-username=AWS \
+  --docker-password=$(aws ecr get-login-password) \
+  --namespace=kafkamoon
 ```
 
+## Observabilty
+
+Grafana Dashboards:
+
+[SpringBoot Observability](https://grafana.com/grafana/dashboards/11378-justai-system-monitor/)
