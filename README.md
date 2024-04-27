@@ -220,4 +220,10 @@ I would like to point out a few things I would have implemented if I had more ti
 - Include alerts for both Kafka and the application;
 - Enable viewing of tracing and logs;
 - Implement validation for the topic naming convention;
-- Add support for `criticality` set to `PRODUCTION`.
+- Add support for `criticality` set to `PRODUCTION`;
+- Add rate limiting to protect the application and also safeguard the Kafka cluster.
+
+
+
+
+

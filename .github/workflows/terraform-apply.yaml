@@ -26,6 +26,6 @@ jobs:
       - name: Terraform init
         run: terraform -chdir=terraform-gitops init
       - name: Terraform apply
-        if: false
+        # if: false
         id: apply
         run: terraform -chdir=terraform-gitops apply --auto-approve
