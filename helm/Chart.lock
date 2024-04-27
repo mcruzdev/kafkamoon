@@ -1,0 +1,12 @@
+dependencies:
+- name: kafka
+  repository: https://charts.bitnami.com/bitnami
+  version: 28.0.4
+- name: prometheus
+  repository: https://charts.bitnami.com/bitnami
+  version: 1.0.6
+- name: grafana-operator
+  repository: https://charts.bitnami.com/bitnami
+  version: 4.1.0
+digest: sha256:347fff392841d43741ccc00ad5e57ffaee9c2ae9240aab915cf97042a513f2df
+generated: "2024-04-26T13:36:33.853729156-03:00"

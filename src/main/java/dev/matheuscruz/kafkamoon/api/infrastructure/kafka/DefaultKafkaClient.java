@@ -38,7 +38,7 @@ public class DefaultKafkaClient implements KafkaClient {
   }
 
   public String createTopic(String topicName, Integer partitions, Short replicationFactor) {
-    LOGGER.info("[flow:create.topic] Creating topic with id {}", topicName);
+    LOGGER.info("[flow:create.topic] Creating topic with name {}", topicName);
     try (AdminClient adminClient = AdminClient.create(this.props)) {
       CreateTopicsResult result =
           adminClient.createTopics(
@@ -50,7 +50,7 @@ public class DefaultKafkaClient implements KafkaClient {
       return result.topicId(topicName).get().toString();
     } catch (ExecutionException | InterruptedException e) {
       if (e.getCause() != null && e.getCause() instanceof TopicExistsException) {
-        throw new TopicExistsException("Topic with id %s already exists".formatted(topicName), e);
+        throw new TopicExistsException("Topic with name %s already exists".formatted(topicName), e);
       }
       throw new RuntimeException(e);
     }

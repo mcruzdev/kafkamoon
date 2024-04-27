@@ -5,10 +5,16 @@ spring:
 kafkamoon:
   kafka:
     bootstrap:
-      servers: localhost:9092
+      servers: ${KAFKA_BOOTSTRAP_SERVERS:http://localhost:9092}
   docs:
     url: http://localhost:3000
     topic-name-exceeded-limit: ${kafkamoon.docs.url}/#/reference/api?id=topic-name-exceeded-limit
     invalid-request: ${kafkamoon.docs.url}/#/reference/api?id=invalid-request
     topic-with-conflict: ${kafkamoon.docs.url}/#/reference/api?id=topic-with-conflict
     entity-not-found: ${kafkamoon.docs.url}/#/reference/api?id=entity-not-found
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: ["prometheus"]
