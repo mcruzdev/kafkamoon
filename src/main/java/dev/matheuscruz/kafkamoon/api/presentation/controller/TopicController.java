@@ -1,14 +1,14 @@
 package dev.matheuscruz.kafkamoon.api.presentation.controller;
 
+import dev.matheuscruz.kafkamoon.api.application.usecases.topics.create.CreateTopicUseCase;
+import dev.matheuscruz.kafkamoon.api.application.usecases.topics.create.CreateTopicUseCaseInput;
+import dev.matheuscruz.kafkamoon.api.application.usecases.topics.create.CreateTopicUseCaseOutput;
+import dev.matheuscruz.kafkamoon.api.application.usecases.topics.delete.DeleteTopicUseCase;
+import dev.matheuscruz.kafkamoon.api.application.usecases.topics.get.GetTopicByIdUseCase;
+import dev.matheuscruz.kafkamoon.api.application.usecases.topics.get.GetTopicByNameUseCaseOutput;
+import dev.matheuscruz.kafkamoon.api.application.usecases.topics.list.ListTopicsUseCase;
+import dev.matheuscruz.kafkamoon.api.application.usecases.topics.list.ListTopicsUseCaseOutput;
 import dev.matheuscruz.kafkamoon.api.presentation.dto.CreateTopicRequest;
-import dev.matheuscruz.kafkamoon.api.usecases.topics.create.CreateTopicUseCase;
-import dev.matheuscruz.kafkamoon.api.usecases.topics.create.CreateTopicUseCaseInput;
-import dev.matheuscruz.kafkamoon.api.usecases.topics.create.CreateTopicUseCaseOutput;
-import dev.matheuscruz.kafkamoon.api.usecases.topics.delete.DeleteTopicUseCase;
-import dev.matheuscruz.kafkamoon.api.usecases.topics.get.GetTopicByIdUseCase;
-import dev.matheuscruz.kafkamoon.api.usecases.topics.get.GetTopicByNameUseCaseOutput;
-import dev.matheuscruz.kafkamoon.api.usecases.topics.list.ListTopicsUseCase;
-import dev.matheuscruz.kafkamoon.api.usecases.topics.list.ListTopicsUseCaseOutput;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,9 +1,9 @@
 package dev.matheuscruz.kafkamoon.api.presentation.controller;
 
-import dev.matheuscruz.kafkamoon.api.usecases.cluster.get.GetClusterInfoUseCase;
-import dev.matheuscruz.kafkamoon.api.usecases.cluster.get.GetClusterInfoUseCaseOutput;
-import dev.matheuscruz.kafkamoon.api.usecases.cluster.nodes.list.ListNodesUseCase;
-import dev.matheuscruz.kafkamoon.api.usecases.cluster.nodes.list.ListNodesUseCaseOutput;
+import dev.matheuscruz.kafkamoon.api.application.usecases.cluster.get.GetClusterInfoUseCase;
+import dev.matheuscruz.kafkamoon.api.application.usecases.cluster.get.GetClusterInfoUseCaseOutput;
+import dev.matheuscruz.kafkamoon.api.application.usecases.cluster.nodes.list.ListNodesUseCase;
+import dev.matheuscruz.kafkamoon.api.application.usecases.cluster.nodes.list.ListNodesUseCaseOutput;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

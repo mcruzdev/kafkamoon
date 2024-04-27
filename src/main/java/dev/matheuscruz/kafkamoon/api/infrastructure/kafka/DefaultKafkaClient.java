@@ -1,6 +1,6 @@
 package dev.matheuscruz.kafkamoon.api.infrastructure.kafka;
 
-import dev.matheuscruz.kafkamoon.api.domain.cluster.KafkaNodeDetails;
+import dev.matheuscruz.kafkamoon.api.model.cluster.KafkaNodeDetails;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -9,8 +9,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletionException;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.DeleteTopicsResult;
@@ -47,12 +48,14 @@ public class DefaultKafkaClient implements KafkaClient {
                       topicName,
                       Optional.ofNullable(partitions),
                       Optional.ofNullable(replicationFactor))));
-      return result.topicId(topicName).get().toString();
-    } catch (ExecutionException | InterruptedException e) {
-      if (e.getCause() != null && e.getCause() instanceof TopicExistsException) {
-        throw new TopicExistsException("Topic with name %s already exists".formatted(topicName), e);
+      return result.topicId(topicName).toCompletionStage().toCompletableFuture().join().toString();
+    } catch (TopicExistsException | CompletionException | CancellationException e) {
+      if (e.getCause() instanceof TopicExistsException) {
+        String message = "Topic '%s' already exists.".formatted(topicName);
+        LOGGER.warn("[flow:topic.create] {}", message);
+        throw new TopicExistsException(message);
       }
-      throw new RuntimeException(e);
+      throw new KafkaCommunicationException(e);
     }
   }
 
@@ -60,26 +63,27 @@ public class DefaultKafkaClient implements KafkaClient {
     LOGGER.info("[flow:list.topic] Listing topics from Kafka bootstrap servers");
     try (AdminClient adminClient = AdminClient.create(this.props)) {
       ListTopicsResult result = adminClient.listTopics();
-      return result.listings().get();
-    } catch (ExecutionException | InterruptedException e) {
-      LOGGER.error("Was not possible to list topics from Kafka cluster", e);
-      throw new RuntimeException(e);
+      return result.listings().toCompletionStage().toCompletableFuture().join();
+    } catch (CompletionException | CancellationException e) {
+      throw new KafkaCommunicationException(e);
     }
   }
 
   @Override
-  public void deleteTopic(String topicId) {
+  public void deleteTopic(String id) {
     try (AdminClient adminClient = AdminClient.create(this.props)) {
       DeleteTopicsResult result =
-          adminClient.deleteTopics(TopicCollection.ofTopicIds(List.of(Uuid.fromString(topicId))));
-      result.all().get();
-    } catch (ExecutionException | InterruptedException e) {
-      if (e.getCause() != null && e.getCause() instanceof UnknownTopicIdException) {
-        LOGGER.warn("There is no topic with id {} on Kafka cluster", topicId);
-        throw new UnknownTopicIdException(e.getMessage());
-      } else {
-        LOGGER.error("Was not possible to delete topic with id %s".formatted(topicId), e);
-      }
+          adminClient.deleteTopics(TopicCollection.ofTopicIds(List.of(Uuid.fromString(id))));
+      result.all().toCompletionStage().toCompletableFuture().join();
+    } catch (UnknownTopicIdException | CompletionException | CancellationException e) {
+      skipIfNotUnknownTopicIdException(id, e);
+    }
+  }
+
+  private static void skipIfNotUnknownTopicIdException(String topicId, RuntimeException e) {
+    if (!(e.getCause() instanceof UnknownTopicIdException)) {
+      LOGGER.warn("[flow:topic.delete] Topic with id '{}' does not exist", topicId);
+      throw new KafkaCommunicationException(e);
     }
   }
 
@@ -87,7 +91,7 @@ public class DefaultKafkaClient implements KafkaClient {
   public KafkaNodeDetails getClusterInfo() {
     try (AdminClient adminClient = AdminClient.create(this.props)) {
       DescribeClusterResult result = adminClient.describeCluster();
-      Node kafkaNode = result.controller().get();
+      Node kafkaNode = result.controller().toCompletionStage().toCompletableFuture().join();
       return new KafkaNodeDetails(
           kafkaNode.idString(),
           kafkaNode.host(),
@@ -96,9 +100,8 @@ public class DefaultKafkaClient implements KafkaClient {
           kafkaNode.port(),
           kafkaNode.isEmpty(),
           null);
-    } catch (ExecutionException | InterruptedException e) {
-      // TODO: throw a meaningful Exception after
-      throw new RuntimeException(e);
+    } catch (CompletionException | CancellationException e) {
+      throw new KafkaCommunicationException(e);
     }
   }
 
@@ -160,20 +163,29 @@ public class DefaultKafkaClient implements KafkaClient {
                     topics);
               })
           .toList();
+    } catch (CompletionException | CancellationException e) {
+      throw new KafkaCommunicationException(e);
     }
   }
 
   @Override
   public Optional<TopicDescription> getTopicById(String id) {
+    Uuid uuid = Uuid.fromString(id);
+
     try (AdminClient adminClient = AdminClient.create(this.props)) {
       Map<Uuid, TopicDescription> response =
           adminClient
-              .describeTopics(TopicCollection.ofTopicIds(List.of(Uuid.fromString(id))))
+              .describeTopics(TopicCollection.ofTopicIds(List.of(uuid)))
               .allTopicIds()
               .toCompletionStage()
               .toCompletableFuture()
               .join();
       return response.values().stream().findFirst();
+    } catch (UnknownTopicIdException | CompletionException | CancellationException e) {
+      if (!(e.getCause() instanceof UnknownTopicIdException)) {
+        throw new KafkaCommunicationException(e);
+      }
+      throw e;
     }
   }
 }

@@ -1,6 +1,6 @@
 package dev.matheuscruz.kafkamoon.api.infrastructure.kafka;
 
-import dev.matheuscruz.kafkamoon.api.domain.cluster.KafkaNodeDetails;
+import dev.matheuscruz.kafkamoon.api.model.cluster.KafkaNodeDetails;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;

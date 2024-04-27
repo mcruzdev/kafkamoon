@@ -7,9 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.matheuscruz.kafkamoon.api.domain.topics.TopicCriticality;
+import dev.matheuscruz.kafkamoon.api.application.usecases.topics.list.ListTopicsUseCaseOutput;
+import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
+import dev.matheuscruz.kafkamoon.api.model.topic.TopicCriticality;
+import dev.matheuscruz.kafkamoon.api.model.topic.TopicName;
 import dev.matheuscruz.kafkamoon.api.presentation.dto.CreateTopicRequest;
-import dev.matheuscruz.kafkamoon.api.usecases.topics.list.ListTopicsUseCaseOutput;
 import java.util.Arrays;
 import org.apache.kafka.common.Uuid;
 import org.assertj.core.api.SoftAssertions;
@@ -33,9 +35,11 @@ class TopicControllerITest extends AbstractBaseITest {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TopicControllerITest.class);
 
+  @Autowired KafkaClient kafkaClient;
+
   @Container
   static KafkaContainer kafka =
-      new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+      new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.1"));
 
   @DynamicPropertySource
   static void registryConfig(DynamicPropertyRegistry dynamicPropertyRegistry) {
@@ -73,7 +77,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should not create a topic with the same name")
-  void shouldReturn409Conflict() throws Exception {
+  void shouldReturn201Conflict() throws Exception {
 
     // arrange
     CreateTopicRequest request =
@@ -101,7 +105,8 @@ class TopicControllerITest extends AbstractBaseITest {
         .andExpect(jsonPath("$.status", Matchers.is(409)))
         .andExpect(
             jsonPath(
-                "$.detail", Matchers.containsString("logging.database.table already exists.")));
+                "$.detail",
+                Matchers.containsString("Topic 'logging.database.table' already exists.")));
   }
 
   @Test
@@ -396,20 +401,39 @@ class TopicControllerITest extends AbstractBaseITest {
   }
 
   @Test
-  @DisplayName("Should return 404 bad request when there is no topic with the provided id")
+  @DisplayName("Should return 204 no content when there is no topic with the provided id")
   void shouldReturn204NoContentWhenDeleteANonExistentTopic() throws Exception {
     // arrange
     String instance = "/api/v1/topics/%s".formatted(Uuid.randomUuid().toString());
     // act, assert
+    mockMvc.perform(delete(instance)).andExpect(MockMvcResultMatchers.status().isNoContent());
+  }
+
+  @Test
+  @DisplayName("Should get topic detail correctly")
+  void shouldGetTopicCorrectly() throws Exception {
+    // arrange
+
+    String id =
+        kafkaClient.createTopic(
+            new TopicName("user", "dataset", "dataName").finalName(), 1, (short) 1);
+
+    // act
     mockMvc
-        .perform(delete(instance))
-        .andExpect(MockMvcResultMatchers.status().isNotFound())
-        .andExpect(jsonPath("$.type", Matchers.containsString("entity-not-found")))
-        .andExpect(jsonPath("$.title", Matchers.is("Not Found")))
-        .andExpect(jsonPath("$.instance", Matchers.containsString(instance)))
-        .andExpect(jsonPath("$.status", Matchers.is(404)))
-        .andExpect(
-            jsonPath(
-                "$.detail", Matchers.containsString("This server does not host this topic ID.")));
+        .perform(
+            get("/api/v1/topics/%s".formatted(id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("user.dataset.dataName")))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(id)))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.partitionInfos").isArray());
+  }
+
+  @Test
+  @DisplayName("Should return 404 when there is no topic with provided id")
+  void shouldReturn404FindingByTopicId() {
+    // arrange
+
   }
 }

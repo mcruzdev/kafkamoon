@@ -27,7 +27,7 @@ class ClusterControllerITest extends AbstractBaseITest {
 
   @Container
   static KafkaContainer kafka =
-      new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:6.2.1"));
+      new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.6.1"));
 
   @DynamicPropertySource
   static void registryConfig(DynamicPropertyRegistry dynamicPropertyRegistry) {
