@@ -12,19 +12,23 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+    classes = Application.class,
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@TestPropertySource(locations = { "classpath:application-it.yaml" })
+@TestPropertySource(locations = {"classpath:application-it.yaml"})
 public class NoCommunicationITest {
 
+  @Autowired MockMvc mockMvc;
 
-   @Autowired
-   MockMvc mockMvc;
-
-   @Test
-   @DisplayName("Should return bad gateway when there is no communication with Kafka")
-   void shouldReturnBadGateway() throws Exception {
-      mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/cluster/info").contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)).andExpect(MockMvcResultMatchers.status().isBadGateway());
-   }
+  @Test
+  @DisplayName("Should return bad gateway when there is no communication with Kafka")
+  void shouldReturnBadGateway() throws Exception {
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.get("/api/v1/cluster/info")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(MockMvcResultMatchers.status().isBadGateway());
+  }
 }

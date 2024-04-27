@@ -12,17 +12,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeleteTopicByIdUseCase {
 
-   private final KafkaClient kafkaClient;
-   private final Metrics metrics;
+  private final KafkaClient kafkaClient;
+  private final Metrics metrics;
 
-   public DeleteTopicByIdUseCase(KafkaClient kafkaClient, Metrics metrics) {
-      this.kafkaClient = kafkaClient;
-      this.metrics = metrics;
-   }
+  public DeleteTopicByIdUseCase(KafkaClient kafkaClient, Metrics metrics) {
+    this.kafkaClient = kafkaClient;
+    this.metrics = metrics;
+  }
 
-   public void execute(String topicUUid) {
-      this.metrics.increment(MetricName.DELETE_TOPIC, Tag.statusInit());
-      this.kafkaClient.deleteTopic(topicUUid);
-      this.metrics.increment(MetricName.DELETE_TOPIC, Tag.statusSuccess());
-   }
+  public void execute(String topicUUid) {
+    this.metrics.increment(MetricName.DELETE_TOPIC, Tag.statusInit());
+    this.kafkaClient.deleteTopic(topicUUid);
+    this.metrics.increment(MetricName.DELETE_TOPIC, Tag.statusSuccess());
+  }
 }

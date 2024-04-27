@@ -4,9 +4,8 @@ import dev.matheuscruz.kafkamoon.api.application.usecases.cluster.get.GetCluster
 import dev.matheuscruz.kafkamoon.api.application.usecases.cluster.get.GetClusterInfoUseCaseOutput;
 import dev.matheuscruz.kafkamoon.api.application.usecases.cluster.nodes.list.ListNodesUseCase;
 import dev.matheuscruz.kafkamoon.api.application.usecases.cluster.nodes.list.ListNodesUseCaseOutput;
-import java.util.List;
-
 import io.swagger.v3.oas.annotations.Hidden;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
