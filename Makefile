@@ -14,7 +14,7 @@ buildAll: buildApp buildDocs
 .PHONY: buildAll
 
 helmUpdate:
-	helm dependency update helm 
+	helm dependency update charts/kafkamoon-api 
 .PHONY: helmUpdate
 
 helmPkg:
