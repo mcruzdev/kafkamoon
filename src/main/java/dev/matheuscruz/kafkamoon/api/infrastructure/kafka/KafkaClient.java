@@ -18,5 +18,5 @@ public interface KafkaClient {
 
   List<KafkaNodeDetails> getNodes();
 
-  Optional<TopicDescription> getTopicByName(String id);
+  Optional<TopicDescription> getTopicById(String id);
 }

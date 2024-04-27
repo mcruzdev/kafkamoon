@@ -22,14 +22,14 @@ public class GetTopicByIdUseCase {
     return id -> !leaderId.equals(id.idString());
   }
 
-  public GetTopicByNameUseCaseOutput execute(String topicName) {
+  public GetTopicByNameUseCaseOutput execute(String topicId) {
     TopicDescription topic =
         this.kafkaClient
-            .getTopicByName(topicName)
+            .getTopicById(topicId)
             .orElseThrow(
                 () ->
                     new UnknownTopicIdException(
-                        "Topic with name %s does not exist".formatted(topicName)));
+                        "Topic with id %s does not exist".formatted(topicId)));
 
     return new GetTopicByNameUseCaseOutput(
         topic.name(),

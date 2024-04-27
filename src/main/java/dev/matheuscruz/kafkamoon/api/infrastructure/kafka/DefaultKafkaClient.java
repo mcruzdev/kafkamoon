@@ -164,11 +164,11 @@ public class DefaultKafkaClient implements KafkaClient {
   }
 
   @Override
-  public Optional<TopicDescription> getTopicByName(String name) {
+  public Optional<TopicDescription> getTopicById(String id) {
     try (AdminClient adminClient = AdminClient.create(this.props)) {
       Map<Uuid, TopicDescription> response =
           adminClient
-              .describeTopics(TopicCollection.ofTopicIds(List.of(Uuid.fromString(name))))
+              .describeTopics(TopicCollection.ofTopicIds(List.of(Uuid.fromString(id))))
               .allTopicIds()
               .toCompletionStage()
               .toCompletableFuture()
