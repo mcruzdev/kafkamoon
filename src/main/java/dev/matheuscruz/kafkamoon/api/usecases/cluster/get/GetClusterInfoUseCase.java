@@ -1,6 +1,6 @@
 package dev.matheuscruz.kafkamoon.api.usecases.cluster.get;
 
-import dev.matheuscruz.kafkamoon.api.domain.cluster.KafkaClusterInfo;
+import dev.matheuscruz.kafkamoon.api.domain.cluster.KafkaNodeDetails;
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ public class GetClusterInfoUseCase {
   }
 
   public GetClusterInfoUseCaseOutput execute() {
-    KafkaClusterInfo clusterInfo = this.kafkaClient.getClusterInfo();
+    KafkaNodeDetails clusterInfo = this.kafkaClient.getClusterInfo();
     return new GetClusterInfoUseCaseOutput(
         clusterInfo.id(),
         clusterInfo.host(),

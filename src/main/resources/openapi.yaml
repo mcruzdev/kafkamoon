@@ -1,0 +1,129 @@
+openapi: 3.0.1
+info:
+  title: Kafkamoon API
+  version: 1.0.0
+paths:
+  "/api/v1/topics/{topicId}":
+    delete:
+      description: Delete topic on Kafka Cluster
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            example: "p8fFEbKGQ22B6M_Da_vCBw"
+      responses:
+        "204":
+          description: No Content
+  "/api/v1/topics":
+    get:
+      description: Get topics from Kafka Cluster
+      responses:
+        "200":
+          description: Ok
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/GetTopicsResponse"
+    post:
+      description: Create topic on Kafka Cluster
+      requestBody:
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/CreateTopicRequest"
+      responses:
+        "201":
+          description: Created
+          headers:
+            Location:
+              description: The URL of the created topic
+              schema:
+                type: string
+                example: "/api/v1/topics/p8fFEbKGQ22B6M_Da_vCBw"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/CreateTopicResponse"
+        "400":
+          description: Bad Request
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        "409":
+          description: Conflict
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+        "500":
+          description: "Internal Server Error"
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+components:
+  schemas:
+    GetTopicResponse:
+      type: object
+      properties:
+        name: 
+          type: string
+          example:  "user.payments.payment-received"
+        topicId:
+          type: string
+          example: "p8fFEbKGQ22B6M_Da_vCBw"
+    GetTopicsResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/GetTopicResponse"
+    ProblemDetails:
+      type: object
+      properties:
+        type: 
+          type: string
+          example: "https://example.com/problem"
+        title:
+          type: string
+          example: "Problem title"
+        status:
+          type: integer
+          example: 400
+        instance:
+          type: string
+          example: "/api/v1/payments"
+        detail:
+          type: string
+          example: "Detail about the problem"
+    CreateTopicResponse:
+      type: object
+      properties:
+        topicName:
+          type: string
+          example: "user.payments.payment-received"
+        topicId:
+          type: string
+          example: "p8fFEbKGQ22B6M_Da_vCBw"
+    CreateTopicRequest:
+      type: object
+      properties:
+        messageType:
+          type: string
+          example: "user"
+        dataset:
+          type: string
+          example: "payments"
+        dataName:
+          type: string
+          example: "payment-received"
+        criticality:
+          type: string
+          enum:
+            - "TEST"          
+      required:
+        - messageType
+        - dataset
+        - dataName
+        - criticality

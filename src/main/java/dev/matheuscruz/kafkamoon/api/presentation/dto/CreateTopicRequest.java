@@ -8,4 +8,4 @@ public record CreateTopicRequest(
     @NotBlank @NotNull String messageType,
     @NotBlank @NotNull String dataset,
     @NotBlank @NotNull String dataName,
-    @Pattern(regexp = "^(TEST|test)$") String criticality) {}
+    @NotNull @Pattern(regexp = "^(TEST|test)$") String criticality) {}

@@ -5,6 +5,8 @@ import dev.matheuscruz.kafkamoon.api.usecases.topics.create.CreateTopicUseCase;
 import dev.matheuscruz.kafkamoon.api.usecases.topics.create.CreateTopicUseCaseInput;
 import dev.matheuscruz.kafkamoon.api.usecases.topics.create.CreateTopicUseCaseOutput;
 import dev.matheuscruz.kafkamoon.api.usecases.topics.delete.DeleteTopicUseCase;
+import dev.matheuscruz.kafkamoon.api.usecases.topics.get.GetTopicByIdUseCase;
+import dev.matheuscruz.kafkamoon.api.usecases.topics.get.GetTopicByNameUseCaseOutput;
 import dev.matheuscruz.kafkamoon.api.usecases.topics.list.ListTopicsUseCase;
 import dev.matheuscruz.kafkamoon.api.usecases.topics.list.ListTopicsUseCaseOutput;
 import jakarta.validation.Valid;
@@ -33,14 +35,16 @@ public class TopicController {
   private final CreateTopicUseCase createTopicUseCase;
   private final ListTopicsUseCase listTopicsUseCase;
   private final DeleteTopicUseCase deleteTopicUseCase;
+  private final GetTopicByIdUseCase getTopicByIdUseCase;
 
   public TopicController(
       CreateTopicUseCase createTopicUseCase,
       ListTopicsUseCase listTopicsUseCase,
-      DeleteTopicUseCase deleteTopicUseCase) {
+      DeleteTopicUseCase deleteTopicUseCase, GetTopicByIdUseCase getTopicByIdUseCase) {
     this.createTopicUseCase = createTopicUseCase;
     this.listTopicsUseCase = listTopicsUseCase;
     this.deleteTopicUseCase = deleteTopicUseCase;
+     this.getTopicByIdUseCase = getTopicByIdUseCase;
   }
 
   @PostMapping
@@ -54,7 +58,7 @@ public class TopicController {
                 request.dataset(),
                 request.dataName(),
                 request.criticality()));
-    String location = "/api/v1/topics/%s".formatted(output.topicId());
+    String location = "/api/v1/topics/%s".formatted(output.id());
     return ResponseEntity.status(HttpStatus.CREATED)
         .header(HttpHeaders.LOCATION, location)
         .body(output);
@@ -66,11 +70,16 @@ public class TopicController {
     return ResponseEntity.ok(this.listTopicsUseCase.execute());
   }
 
-  @DeleteMapping("/{topicId}")
-  public ResponseEntity<Void> delete(@PathVariable("topicId") @NotNull @NotBlank String topicId) {
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable("id") @NotNull @NotBlank String topicId) {
     LOGGER.info(
-        "[flow:delete.topic] Receiving HTTP request to delete topic with topicId {}", topicId);
+        "[flow:delete.topic] Receiving HTTP request to delete topic with id {}", topicId);
     this.deleteTopicUseCase.execute(topicId);
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/{id}")
+  public GetTopicByNameUseCaseOutput getById(@PathVariable("id") @NotNull @NotBlank String topicId) {
+    return this.getTopicByIdUseCase.execute(topicId);
   }
 }

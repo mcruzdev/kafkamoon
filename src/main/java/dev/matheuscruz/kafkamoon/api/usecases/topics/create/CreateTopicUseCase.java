@@ -1,6 +1,5 @@
 package dev.matheuscruz.kafkamoon.api.usecases.topics.create;
 
-import dev.matheuscruz.kafkamoon.api.domain.topics.Topic;
 import dev.matheuscruz.kafkamoon.api.domain.topics.TopicCriticality;
 import dev.matheuscruz.kafkamoon.api.domain.topics.TopicName;
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
@@ -25,8 +24,6 @@ public class CreateTopicUseCase {
   public CreateTopicUseCaseOutput execute(final CreateTopicUseCaseInput input) {
     TopicName topicName = new TopicName(input.messageType(), input.dataSet(), input.dataName());
 
-    Topic topic = new Topic(topicName);
-
     TopicCriticality criticality =
         TopicCriticality.valueOf(input.criticality().toUpperCase(Locale.ROOT));
 
@@ -44,6 +41,6 @@ public class CreateTopicUseCase {
         topicName,
         topicId);
 
-    return new CreateTopicUseCaseOutput(topic.getName().finalName(), topicId, topic.getCreatedAt());
+    return new CreateTopicUseCaseOutput(topicName.finalName(), topicId);
   }
 }

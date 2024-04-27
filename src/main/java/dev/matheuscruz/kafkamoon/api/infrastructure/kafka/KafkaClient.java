@@ -1,10 +1,12 @@
 package dev.matheuscruz.kafkamoon.api.infrastructure.kafka;
 
-import dev.matheuscruz.kafkamoon.api.domain.cluster.KafkaClusterInfo;
 import dev.matheuscruz.kafkamoon.api.domain.cluster.KafkaNodeDetails;
+import org.apache.kafka.clients.admin.TopicDescription;
+import org.apache.kafka.clients.admin.TopicListing;
+
 import java.util.Collection;
 import java.util.List;
-import org.apache.kafka.clients.admin.TopicListing;
+import java.util.Optional;
 
 public interface KafkaClient {
   String createTopic(String topicName, Integer partitions, Short replicationFactor);
@@ -13,7 +15,9 @@ public interface KafkaClient {
 
   void deleteTopic(String topicUUid);
 
-  KafkaClusterInfo getClusterInfo();
+  KafkaNodeDetails getClusterInfo();
 
   List<KafkaNodeDetails> getNodes();
+
+  Optional<TopicDescription> getTopicByName(String id);
 }
