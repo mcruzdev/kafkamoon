@@ -1,6 +1,6 @@
-package dev.matheuscruz.kafkamoon.api.model.topic;
+package dev.matheuscruz.kafkamoon.api.application.model.topic;
 
-import dev.matheuscruz.kafkamoon.api.model.exception.InvalidCriticalityException;
+import dev.matheuscruz.kafkamoon.api.application.model.exception.InvalidCriticalityException;
 import java.util.Arrays;
 
 public enum TopicCriticality {

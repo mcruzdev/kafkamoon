@@ -1,4 +1,4 @@
-package dev.matheuscruz.kafkamoon.api.model.cluster;
+package dev.matheuscruz.kafkamoon.api.application.model.cluster;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

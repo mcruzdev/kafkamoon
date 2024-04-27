@@ -7,10 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.matheuscruz.kafkamoon.api.application.model.topic.TopicCriticality;
+import dev.matheuscruz.kafkamoon.api.application.model.topic.TopicName;
 import dev.matheuscruz.kafkamoon.api.application.usecases.topics.list.ListTopicsUseCaseOutput;
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
-import dev.matheuscruz.kafkamoon.api.model.topic.TopicCriticality;
-import dev.matheuscruz.kafkamoon.api.model.topic.TopicName;
 import dev.matheuscruz.kafkamoon.api.presentation.dto.CreateTopicRequest;
 import java.util.Arrays;
 import org.apache.kafka.common.Uuid;

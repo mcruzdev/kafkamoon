@@ -2,7 +2,10 @@ package dev.matheuscruz.kafkamoon.api.infrastructure.config;
 
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.DefaultKafkaClient;
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
+
+import java.time.Duration;
 import java.util.Properties;
+
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,18 +16,31 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class KafkaClientConfiguration {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(KafkaClientConfiguration.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(KafkaClientConfiguration.class);
 
-  @Value("${kafkamoon.kafka.bootstrap.servers}")
-  private String bootstrapServers;
+   @Value("${kafkamoon.kafka.bootstrap.servers}")
+   private String bootstrapServers;
 
-  @Bean
-  public KafkaClient kafkaClient() {
-    LOGGER.info(
-        "[flow:startup.config] Creating KafkaClient bean with bootstrap.servers as {}",
-        bootstrapServers);
-    Properties props = new Properties();
-    props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-    return new DefaultKafkaClient(props);
-  }
+   @Value("${kafkamoon.kafka.retries:0}")
+   private Integer kafkaClientRetries;
+
+   @Value("${kafkamoon.kafka.request.timeout.seconds:5}")
+   private Integer kafkaRequestTimeoutSeconds;
+
+   @Value("${spring.application.name}")
+   private String applicationName;
+
+
+   @Bean
+   public KafkaClient kafkaClient() {
+      LOGGER.info("[flow:startup.config] Creating KafkaClient bean with bootstrap.servers as {}", bootstrapServers);
+      Properties props = new Properties();
+      int timeoutMs = (int) Duration.ofSeconds(kafkaRequestTimeoutSeconds).toMillis();
+      props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+      props.put("request.timeout.ms", timeoutMs);
+      props.put("retries", kafkaClientRetries);
+      props.put("client.id", applicationName);
+      props.put("default.api.timeout.ms", timeoutMs);
+      return new DefaultKafkaClient(props);
+   }
 }

@@ -1,4 +1,4 @@
-package dev.matheuscruz.kafkamoon.api.model.topic;
+package dev.matheuscruz.kafkamoon.api.application.model.topic;
 
 import java.util.Objects;
 

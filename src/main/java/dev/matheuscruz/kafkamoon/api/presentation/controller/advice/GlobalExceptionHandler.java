@@ -1,10 +1,10 @@
 package dev.matheuscruz.kafkamoon.api.presentation.controller.advice;
 
+import dev.matheuscruz.kafkamoon.api.application.model.topic.TopicNameExceededException;
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaCommunicationException;
 import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.MetricName;
 import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.Metrics;
 import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.Tag;
-import dev.matheuscruz.kafkamoon.api.model.topic.TopicNameExceededException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import org.apache.kafka.common.errors.TopicExistsException;

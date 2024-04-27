@@ -2,11 +2,11 @@ package dev.matheuscruz.kafkamoon.api.application.usecases.topics.create;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import dev.matheuscruz.kafkamoon.api.application.model.exception.InvalidCriticalityException;
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
 import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.MetricName;
 import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.Metrics;
 import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.Tag;
-import dev.matheuscruz.kafkamoon.api.model.exception.InvalidCriticalityException;
 import org.assertj.core.api.SoftAssertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
