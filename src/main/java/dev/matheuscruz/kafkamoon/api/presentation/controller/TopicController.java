@@ -9,6 +9,7 @@ import dev.matheuscruz.kafkamoon.api.application.usecases.topics.get.GetTopicByN
 import dev.matheuscruz.kafkamoon.api.application.usecases.topics.list.ListTopicsUseCase;
 import dev.matheuscruz.kafkamoon.api.application.usecases.topics.list.ListTopicsUseCaseOutput;
 import dev.matheuscruz.kafkamoon.api.presentation.dto.CreateTopicRequest;
+import io.micrometer.core.annotation.Timed;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -51,6 +52,7 @@ public class TopicController {
   }
 
   @PostMapping
+  @Timed("create_topic_time")
   public ResponseEntity<CreateTopicUseCaseOutput> create(
       @Valid @RequestBody CreateTopicRequest request) {
     LOGGER.info("[flow:create.topic] Receiving HTTP request to create a topic: {}", request);
@@ -68,12 +70,14 @@ public class TopicController {
   }
 
   @GetMapping
+  @Timed("list_all_topics_time")
   public ResponseEntity<List<ListTopicsUseCaseOutput>> index() {
     LOGGER.info("[flow:list.topic] Receiving HTTP request to list topics");
     return ResponseEntity.ok(this.listTopicsUseCase.execute());
   }
 
   @DeleteMapping("/{id}")
+  @Timed("delete_topic_time")
   public ResponseEntity<Void> delete(@PathVariable("id") @NotNull @NotBlank String topicId) {
     LOGGER.info("[flow:topic.delete] Receiving HTTP request to delete topic with id '{}'", topicId);
     this.deleteTopicByIdUseCase.execute(topicId);
@@ -81,6 +85,7 @@ public class TopicController {
   }
 
   @GetMapping("/{id}")
+  @Timed("get_topic_by_id_time")
   public GetTopicByNameUseCaseOutput getById(
       @PathVariable("id") @NotNull @NotBlank String topicId) {
     LOGGER.info("[flow:topic.get] Receiving HTTP request to get topic by id '{}'", topicId);

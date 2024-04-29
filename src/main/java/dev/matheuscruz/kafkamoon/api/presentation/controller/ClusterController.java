@@ -4,6 +4,7 @@ import dev.matheuscruz.kafkamoon.api.application.usecases.cluster.get.GetCluster
 import dev.matheuscruz.kafkamoon.api.application.usecases.cluster.get.GetClusterInfoUseCaseOutput;
 import dev.matheuscruz.kafkamoon.api.application.usecases.cluster.nodes.list.ListNodesUseCase;
 import dev.matheuscruz.kafkamoon.api.application.usecases.cluster.nodes.list.ListNodesUseCaseOutput;
+import io.micrometer.core.annotation.Timed;
 import io.swagger.v3.oas.annotations.Hidden;
 import java.util.List;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ public class ClusterController {
   }
 
   @GetMapping("/info")
+  @Timed("get_cluster_info_time")
   public ResponseEntity<?> getCluster() {
     LOGGER.info("[flow:cluster.get.info] Getting cluster info");
     GetClusterInfoUseCaseOutput output = this.getClusterInfoUseCase.execute();
@@ -36,6 +38,7 @@ public class ClusterController {
   }
 
   @GetMapping("/nodes")
+  @Timed("get_nodes_time")
   public ResponseEntity<?> getNodes() {
     LOGGER.info("[flow:cluster.get.nodes] Getting nodes from Kafka cluster");
     List<ListNodesUseCaseOutput> output = this.listNodesUseCase.execute();
