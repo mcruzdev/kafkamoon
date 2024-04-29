@@ -10,7 +10,7 @@ services:
     profiles:
       - "dev"
       - "local"
-    image: kafkamoon-docs:latest
+    image: kafkamoon-docs:main
     ports:
       - 3000:3000
   zookeeper:

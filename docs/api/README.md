@@ -1,6 +1,6 @@
 # API
 
-The OpenAPI specification for Kafkamoon API can be seen on `{host}/swagger-ui/index.html`.
+The OpenAPI specification for Kafkamoon API can be seen [**here**](https://kafkamoon.platformoon.com/swagger-ui/index.html). Feel free to interact with the API.
 
 ## Problems detail
 

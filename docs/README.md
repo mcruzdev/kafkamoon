@@ -7,15 +7,15 @@ with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) as part of a 
 
 See the application running in **production**:
 
-| Service  | Endpoint  | 
-|---|---|
-| Grafana   | https://grafana.platformoon.com   |  
-| Kafkamoon API | https://kafkamoon-api.platformoon.com |
+| Service  | Endpoint                                                                                     | 
+|---|----------------------------------------------------------------------------------------------|
+| Grafana   | https://grafana.platformoon.com                                                              |  
+| Kafkamoon API | [https://kafkamoon.platformoon.com](https://kafkamoon.platformoon.com/swagger-ui/index.html) |
 
 
 ## Reference
 
-For more detailed information on the Kafkamoon API, refer to our [API references](reference/api.md).
+For more detailed information on the Kafkamoon API, refer to our [API references](api/README).
 
 ## Explanation
 

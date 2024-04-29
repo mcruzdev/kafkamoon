@@ -1,5 +1,5 @@
 <!-- docs/_sidebar.md -->
 
 * [Getting Started](/)
-* [API](reference/api.md)
+* [API](api/README.md)
 * [Explanation](explanation/README.md)
