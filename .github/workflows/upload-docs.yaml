@@ -8,7 +8,7 @@ on:
       - "docs/**"
 env:
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
-
+jobs:
   push_to_registry:
     name: Upload Kafkamoon Docs
     runs-on: ubuntu-latest
