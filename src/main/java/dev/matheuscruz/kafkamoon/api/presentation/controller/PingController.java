@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PingController {
 
-  @GetMapping(produces = { MediaType.TEXT_PLAIN_VALUE })
+  @GetMapping(produces = {MediaType.TEXT_PLAIN_VALUE})
   public String ping() {
     return "pong";
   }

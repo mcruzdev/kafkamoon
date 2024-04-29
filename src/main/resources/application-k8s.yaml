@@ -1,26 +1,12 @@
 spring:
   application:
     name: kafkamoon-api
-
 kafkamoon:
-  kafka:
-    retries: 0
-    default:
-      api:
-        timeout:
-          ms: 2000
-    bootstrap:
-      servers: ${KAFKA_BOOTSTRAP_SERVERS:http://localhost:9092}
   docs:
-    url: http://localhost:3000
+    url: https://docs.platformoon.com
     topic-name-exceeded-limit: ${kafkamoon.docs.url}/#/reference/api?id=topic-name-exceeded-limit
     invalid-request: ${kafkamoon.docs.url}/#/reference/api?id=invalid-request
     topic-with-conflict: ${kafkamoon.docs.url}/#/reference/api?id=topic-with-conflict
     entity-not-found: ${kafkamoon.docs.url}/#/reference/api?id=entity-not-found
     kafka-communication-failure: ${kafkamoon.docs.url}/#/reference/api?id=kafka-communication-failure
-management:
-  endpoints:
-    web:
-      exposure:
-          include: ["prometheus"]
 
