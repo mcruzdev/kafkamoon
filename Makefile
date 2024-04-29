@@ -18,7 +18,7 @@ helmUpdate:
 .PHONY: helmUpdate
 
 helmPkg:
-	helm package helm
+	helm package charts/kafkamoon-api
 .PHONY: helmPkg
 
 helmInstall:

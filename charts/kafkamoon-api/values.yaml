@@ -1,13 +1,41 @@
 kafkamoon:
-  port: 8080
-  image: docker.io/matheuscruzdev/kafkamoon-api:latest
+  api:
+    port: 8080
+    image: docker pull matheuscruzdev/kafkamoon-api:v0.1.0-test.5
+  docs:
+    port: 3000
+    image: docker.io/matheuscruzdev/kafkamoon-docs:main
+  certificates:
+    api:
+    docs:
 
+# grafana operator
 grafana-operator:
-    commonLabels:
-      dashboards: "grafana"
+  enabled: true
+  grafana:
+    service:
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+        service.beta.kubernetes.io/aws-load-balancer-tls-cert:
+        service.beta.kubernetes.io/aws-load-balancer-tls-ports: "https"
+      extraPorts: 
+        - port: 443
+          name: "https"
+          targetPort: 3000
+      type: "LoadBalancer"
+  commonLabels:
+    dashboards: "grafana"
 
 # bitnami/kafka configuration
 kafka:
+  enabled: true
+  extraConfigs:
+    deleteTopicEnable: true
+    autoCreateTopicsEnable: false 
+  volumePermissions:
+    enabled: true
+  controller:
+    replicaCount: 2
   listeners:
     client:
       protocol: PLAINTEXT
@@ -25,6 +53,10 @@ kafka:
       enabled: true
 
 prometheus:
+  enabled: true
+  alertmanager:
+    service:
+      type: "ClusterIP"
   server:
     configuration: |
       scrape_configs:

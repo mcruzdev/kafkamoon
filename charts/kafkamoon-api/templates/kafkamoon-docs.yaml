@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafkamoon-docs
+spec:
+  selector:
+    matchLabels:
+      app: kafkamoon-docs
+  template:
+    metadata:
+      labels:
+        app: kafkamoon-docs
+    spec:
+      containers:
+      - name: kafkamoon-docs
+        image: {{ .Values.kafkamoon.docs.image }}
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        ports:
+        - containerPort: {{ .Values.kafkamoon.docs.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: 'kafkamoon-docs'
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+    service.beta.kubernetes.io/aws-load-balancer-tls-cert: "{{ .Values.kafkamoon.certificates.docs }}"
+    service.beta.kubernetes.io/aws-load-balancer-tls-ports: "https"
+spec:
+  type: LoadBalancer
+  selector:
+    app: 'kafkamoon-docs'
+  ports:
+  - name: "https"
+    port: 443
+    targetPort: 3000

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafkamoon-api
+spec:
+  selector:
+    matchLabels:
+      app: kafkamoon-api
+  template:
+    metadata:
+      labels:
+        app: kafkamoon-api
+    spec:
+      containers:
+      - name: kafkamoon-api
+        image: {{ .Values.kafkamoon.api.image }}
+        env:
+          - name: KAFKA_BOOTSTRAP_SERVERS
+            value: {{ .Release.Name }}.{{ .Release.Namespace }}-controller-headless.svc.cluster.local:9092,{{ .Release.Name }}-controller-headless.{{ .Release.Namespace }}.svc.cluster.local:9093
+          - name: SPRING_ACTIVE_PROFILES
+            value: k8s
+        resources:
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        ports:
+        - containerPort: {{ .Values.kafkamoon.api.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: 'kafkamoon-api'
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+    service.beta.kubernetes.io/aws-load-balancer-tls-cert: {{ .Values.kafkamoon.certificates.api }}
+    service.beta.kubernetes.io/aws-load-balancer-tls-ports: "https"
+spec:
+  type: LoadBalancer
+  selector:
+    app: 'kafkamoon-api'
+  ports:
+  - name: "https"
+    port: 443
+    targetPort: 8080
