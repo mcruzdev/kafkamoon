@@ -7,9 +7,10 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
-    name:  Run CI pipeline
+    name: Run CI pipeline
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
@@ -17,34 +18,33 @@ jobs:
           java-version: '17'
       - name: Check formatter
         run: mvn -f pom.xml spotless:check
+
       - name: Test
         run: mvn -f pom.xml clean test
+
       - name: Package application
-        run: mvn -f pom.xml clean package
-      - name: Configure AWS Credentials
+        run: mvn -f pom.xml clean package -DskipTests
+
+      - name: Log in to Docker Hub
         if: startsWith(github.ref, 'refs/tags/v')
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-      - name: Get tag
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
         if: startsWith(github.ref, 'refs/tags/v')
-        id: tag
-        uses: dawidd6/action-get-tag@v1
-      - name: Login to Amazon ECR
-        if: startsWith(github.ref, 'refs/tags/v')
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          mask-password: true
-      - name: Build Image
+          images: matheuscruzdev/kafkamoon-api
+
+      - name: Build and push Docker image
         if: startsWith(github.ref, 'refs/tags/v')
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: docker build -t $ECR_REGISTRY/kafkamoon-api:${{steps.tag.outputs.tag}} .
-      - name: Publish Image
-        if: startsWith(github.ref, 'refs/tags/v')
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: docker push $ECR_REGISTRY/kafkamoon-api:${{steps.tag.outputs.tag}}
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
