@@ -31,7 +31,7 @@ public class GetTopicByIdUseCase {
     return id -> !leaderId.equals(id.idString());
   }
 
-  public GetTopicByNameUseCaseOutput execute(String topicId) {
+  public GetTopicByIdUseCaseOutput execute(String topicId) {
     this.metrics.increment(MetricName.GET_TOPIC_BY_ID, Tag.statusInit());
     TopicDescription topic =
         this.kafkaClient
@@ -41,15 +41,10 @@ public class GetTopicByIdUseCase {
                     new UnknownTopicIdException(
                         "Topic with id %s does not exist".formatted(topicId)));
 
-    GetTopicByNameUseCaseOutput output =
-        new GetTopicByNameUseCaseOutput(
-            topic.name(),
-            topic.topicId().toString(),
-            topic.partitions().stream().map(this::mapPartitionInfo).toList());
-
-    metrics.increment(MetricName.GET_TOPIC_BY_ID, Tag.statusSuccess());
-
-    return output;
+    return new GetTopicByIdUseCaseOutput(
+        topic.name(),
+        topic.topicId().toString(),
+        topic.partitions().stream().map(this::mapPartitionInfo).toList());
   }
 
   private PartitionInfo mapPartitionInfo(final TopicPartitionInfo info) {

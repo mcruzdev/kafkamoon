@@ -1,9 +1,6 @@
 package dev.matheuscruz.kafkamoon.api.application.usecases.topics.list;
 
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
-import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.MetricName;
-import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.Metrics;
-import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.Tag;
 import java.util.List;
 import org.springframework.stereotype.Component;
 
@@ -14,23 +11,17 @@ import org.springframework.stereotype.Component;
 public class ListTopicsUseCase {
 
   private final KafkaClient kafkaClient;
-  private final Metrics metrics;
 
-  public ListTopicsUseCase(KafkaClient kafkaClient, Metrics metrics) {
+  public ListTopicsUseCase(KafkaClient kafkaClient) {
     this.kafkaClient = kafkaClient;
-    this.metrics = metrics;
   }
 
   public List<ListTopicsUseCaseOutput> execute() {
-    this.metrics.increment(MetricName.LIST_TOPICS, Tag.statusInit());
-    List<ListTopicsUseCaseOutput> output =
-        this.kafkaClient.listTopics().stream()
-            .map(
-                item ->
-                    new ListTopicsUseCaseOutput(
-                        item.name(), item.topicId().toString(), item.isInternal()))
-            .toList();
-    this.metrics.increment(MetricName.LIST_TOPICS, Tag.statusSuccess());
-    return output;
+    return this.kafkaClient.listTopics().stream()
+        .map(
+            item ->
+                new ListTopicsUseCaseOutput(
+                    item.name(), item.topicId().toString(), item.isInternal()))
+        .toList();
   }
 }

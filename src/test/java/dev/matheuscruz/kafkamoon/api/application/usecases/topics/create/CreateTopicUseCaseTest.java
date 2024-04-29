@@ -4,9 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import dev.matheuscruz.kafkamoon.api.application.model.exception.InvalidCriticalityException;
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
-import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.MetricName;
-import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.Metrics;
-import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.Tag;
 import org.assertj.core.api.SoftAssertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -23,8 +20,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class CreateTopicUseCaseTest {
 
   @Mock KafkaClient kafkaClient;
-
-  @Mock Metrics metrics;
 
   @InjectMocks CreateTopicUseCase sut;
 
@@ -50,9 +45,6 @@ class CreateTopicUseCaseTest {
 
     // should not call kakfaClient
     Mockito.verify(kafkaClient, Mockito.times(0)).getTopicById(Mockito.anyString());
-
-    // should call metrics
-    Mockito.verify(metrics, Mockito.times(1)).increment(MetricName.CREATE_TOPIC, Tag.statusInit());
   }
 
   @Test

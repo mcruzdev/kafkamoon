@@ -1,5 +1,6 @@
 package dev.matheuscruz.kafkamoon.api.infrastructure.kafka;
 
+import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.Metrics;
 import java.util.Properties;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ public class KafkaClientConfiguration {
   private String applicationName;
 
   @Bean
-  public KafkaClient kafkaClient() {
+  public KafkaClient kafkaClient(Metrics metrics) {
     LOGGER.info(
         "[flow:startup.config] Creating KafkaClient bean with bootstrap.servers as {}",
         bootstrapServers);
@@ -36,6 +37,6 @@ public class KafkaClientConfiguration {
     props.put("client.id", applicationName);
     props.put("default.api.timeout.ms", kafkaDefaultApiTimeoutMs);
     props.put("request.timeout.ms", kafkaDefaultApiTimeoutMs);
-    return new DefaultKafkaClient(props);
+    return new DefaultKafkaClient(props, metrics);
   }
 }

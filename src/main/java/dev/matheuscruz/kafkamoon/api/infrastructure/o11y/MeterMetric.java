@@ -21,7 +21,9 @@ public class MeterMetric implements Metrics {
   public void increment(MetricName metric, Tag... tags) {
     Counter.Builder builder = Counter.builder(buildName(metric));
     for (Tag tag : tags) {
-      builder.tag(tag.key(), tag.value());
+      if (tag.selfValidate()) {
+        builder.tag(tag.key(), tag.value());
+      }
     }
     builder.register(meterRegistry).increment();
   }

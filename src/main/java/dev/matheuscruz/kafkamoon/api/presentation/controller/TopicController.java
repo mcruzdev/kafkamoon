@@ -5,7 +5,7 @@ import dev.matheuscruz.kafkamoon.api.application.usecases.topics.create.CreateTo
 import dev.matheuscruz.kafkamoon.api.application.usecases.topics.create.CreateTopicUseCaseOutput;
 import dev.matheuscruz.kafkamoon.api.application.usecases.topics.delete.DeleteTopicByIdUseCase;
 import dev.matheuscruz.kafkamoon.api.application.usecases.topics.get.GetTopicByIdUseCase;
-import dev.matheuscruz.kafkamoon.api.application.usecases.topics.get.GetTopicByNameUseCaseOutput;
+import dev.matheuscruz.kafkamoon.api.application.usecases.topics.get.GetTopicByIdUseCaseOutput;
 import dev.matheuscruz.kafkamoon.api.application.usecases.topics.list.ListTopicsUseCase;
 import dev.matheuscruz.kafkamoon.api.application.usecases.topics.list.ListTopicsUseCaseOutput;
 import dev.matheuscruz.kafkamoon.api.presentation.dto.CreateTopicRequest;
@@ -86,8 +86,7 @@ public class TopicController {
 
   @GetMapping("/{id}")
   @Timed("get_topic_by_id_time")
-  public GetTopicByNameUseCaseOutput getById(
-      @PathVariable("id") @NotNull @NotBlank String topicId) {
+  public GetTopicByIdUseCaseOutput getById(@PathVariable("id") @NotNull @NotBlank String topicId) {
     LOGGER.info("[flow:topic.get] Receiving HTTP request to get topic by id '{}'", topicId);
     return this.getTopicByIdUseCase.execute(topicId);
   }
