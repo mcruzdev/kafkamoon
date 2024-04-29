@@ -14,19 +14,8 @@ with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) as part of a 
     - [Prerequisites](#prerequisites)
     - [Running the project locally with Docker Compose](#running-the-project-locally-with-docker-compose)
     - [Running the project locally on Kubernetes](#running-the-project-locally-on-kubernetes)
-    - [Running Only the Documentation](#running-only-the-documentation)
-  - [How-to guides](#how-to-guides)
-  - [Reference](#reference)
-  - [Explanation](#explanation)
-  - [Continuous Integration](#continuous-integration)
-  - [Terraform GitOps](#terraform-gitops)
-    - [How it works?](#how-it-works)
-    - [When does `terraform apply` happen?](#when-does-terraform-apply-happen)
-    - [How it was configured?](#how-it-was-configured)
-  - [Configuring Kubernetes Cluster](#configuring-kubernetes-cluster)
-  - [Observability](#observability)
-  - [Final Remarks](#final-remarks)
-    - [What I Would Have Done If I Had More Time](#what-i-would-have-done-if-i-had-more-time)
+    - [Running the project on EKS](#running-the-project-on-eks)
+- [Running on EKS](#running-on-eks)
 ## Getting Started
 
 ### Prerequisites
