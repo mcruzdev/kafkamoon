@@ -11,6 +11,7 @@ env:
 
 jobs:
   terraform:
+    if: false
     runs-on: ubuntu-latest
     name: Run Terraform pipeline
     steps:
@@ -26,6 +27,5 @@ jobs:
       - name: Terraform init
         run: terraform -chdir=terraform-gitops init
       - name: Terraform apply
-        # if: false
         id: apply
         run: terraform -chdir=terraform-gitops apply --auto-approve
