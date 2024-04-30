@@ -10,6 +10,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,7 @@ public class ClusterController {
     this.listNodesUseCase = listNodesUseCase;
   }
 
+  @PreAuthorize("hasRole('READER')")
   @GetMapping("/info")
   @Timed("get_cluster_info_time")
   public ResponseEntity<?> getCluster() {
@@ -37,6 +39,7 @@ public class ClusterController {
     return ResponseEntity.ok(output);
   }
 
+  @PreAuthorize("hasRole('READER')")
   @GetMapping("/nodes")
   @Timed("get_nodes_time")
   public ResponseEntity<?> getNodes() {

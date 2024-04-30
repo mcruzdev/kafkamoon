@@ -25,15 +25,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: 'kafkamoon-docs'
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
-    service.beta.kubernetes.io/aws-load-balancer-tls-cert: "{{ .Values.kafkamoon.certificates.docs }}"
-    service.beta.kubernetes.io/aws-load-balancer-tls-ports: "https"
 spec:
   type: LoadBalancer
   selector:
     app: 'kafkamoon-docs'
   ports:
-  - name: "https"
-    port: 443
+  - name: "http"
+    port: 80
     targetPort: 3000

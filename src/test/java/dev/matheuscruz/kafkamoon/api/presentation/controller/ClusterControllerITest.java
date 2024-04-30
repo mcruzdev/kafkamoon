@@ -1,6 +1,7 @@
 package dev.matheuscruz.kafkamoon.api.presentation.controller;
 
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
+import dev.matheuscruz.kafkamoon.api.infrastructure.security.SecurityConfiguration;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,6 +45,7 @@ class ClusterControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should get cluster info correctly")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_READER)
   void shouldGetClusterInfo() throws Exception {
     mockMvc
         .perform(
@@ -55,6 +58,7 @@ class ClusterControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should get cluster node details")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_READER)
   void shouldGetClusterDetails() throws Exception {
     mockMvc
         .perform(
@@ -71,6 +75,7 @@ class ClusterControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should get cluster node details with quantityOfTopics equals to 1")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_READER)
   void shouldGetClusterDetailsWithTopic() throws Exception {
     // arrange
     String topicId = kafkaClient.createTopic("user.payments.payment-created", 1, (short) 1);

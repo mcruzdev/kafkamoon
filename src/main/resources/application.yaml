@@ -1,6 +1,17 @@
+server:
+  port: 8888
+
 spring:
   application:
     name: kafkamoon-api
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/kafkamoon}
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
 kafkamoon:
   kafka:
     retries: 0
