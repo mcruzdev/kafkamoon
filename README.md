@@ -3,19 +3,21 @@
 Welcome to Kafkamoon, a Kafka management application. This project demonstrates integration
 with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) as part of a hiring test.
 
-> [!NOTE] 
-> This README documentation contains information on how to run the Kafkamoon application locally using Docker or Kubernetes.
+> [!NOTE]
+> This README documentation contains information on how to run the Kafkamoon application locally using Docker or
+> Kubernetes.
 > If you want to see all the information about the decisions made in this project, see the official documentation.
 
 ## Table of Contents
 
 - [Kafkamoon API](#kafkamoon-api)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Running the project locally with Docker Compose](#running-the-project-locally-with-docker-compose)
-    - [Running the project locally on Kubernetes](#running-the-project-locally-on-kubernetes)
-    - [Running the project on EKS](#running-the-project-on-eks)
+    - [Table of Contents](#table-of-contents)
+    - [Getting Started](#getting-started)
+        - [Prerequisites](#prerequisites)
+        - [Running the project locally with Docker Compose](#running-the-project-locally-with-docker-compose)
+        - [Running the project locally on Kubernetes](#running-the-project-locally-on-kubernetes)
+        - [Running the project on EKS](#running-the-project-on-eks)
+
 ## Getting Started
 
 ### Prerequisites
@@ -64,7 +66,7 @@ Running with docker-compose you will have:
 - [Kafkamoon documentation](http://localhost:3000)
 - [Kafkamoon API](http://localhost:8080/swagger-ui/index.html)
 
-> [!NOTE] 
+> [!NOTE]
 > If you want to run only the infrastructure (Kafka) and Documentation run the following command:
 > ```shell
 > docker-compose --profile dev up -d
@@ -74,7 +76,6 @@ After the application is running, you can interact with the following resources:
 
 * [OpenAPI specification](http://localhost:8080/swagger-ui.html) for exploring and interacting with the API.
 * [Kafkamoon Documentation](http://localhost:3000) for additional information and guidance.
-
 
 ### Running the project locally on Kubernetes
 
@@ -114,25 +115,47 @@ This installation contains:
 
 - Grafana
 - Prometheus
-- Kafka cluster with 2 replicas
-- Kafkamoon API
+- Kafka cluster (2 replicas)
+- Kafkamoon API (2 replicas)
 - Kafkamoon Documentation
+- Keycloak
+
+**Accessing Keycloak**:
+
+1. Get Keycloak user password to access the Keycloak Administration:
+
+```shell
+kubectl get secret kafkamoon-keycloak -o jsonpath='{.data.'admin-password'}' | base64 --decode
+```
+
+2. Do a `port-forward` command:
+
+```shell
+kubectl port-forward svc/kafkamoon-keycloak 8888:80
+```
+
+> [!NOTE]
+> The username is `user`.
+>
+> Import the realm [keycloak realm](/keycloak/kafkamoon-realm.json) file create all necessary users with respective
+> roles and enjoy it.
+
 
 **Accessing Grafana:**
 
-1. Get Grafana admin to access Grafana Dashboards
+1. Get Grafana admin password to access Grafana Dashboards
 
 ```shell
 kubectl get secret kafkamoon-grafana-operator-grafana-admin-credentials -o jsonpath="{.data['GF_SECURITY_ADMIN_PASSWORD']}" | base64 --decode
 ```
 
-The ouput should like something like this:
+The output should like something like this:
 
 ```shell
 abc123_d==%
 ```
 
-> [!IMPORTANT] 
+> [!IMPORTANT]
 > Remove the last character (`%`) from the password.
 
 2. Do a `port-forward` command:
@@ -149,10 +172,9 @@ Access the Grafana through this [url](http://localhost:8888).
 
 First of all, you need:
 
-1. To have your AWS credentials (`~/.aws/credentials`) configured locally. 
+1. To have your AWS credentials (`~/.aws/credentials`) configured locally.
 
 > Run the following command: `aws configure`
-
 
 2. To have a bucket created to store the `terraform.tfstate` file.
 
