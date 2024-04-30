@@ -11,6 +11,7 @@ spec:
       labels:
         app: kafkamoon-api
     spec:
+      replicas: 2
       containers:
       - name: kafkamoon-api
         image: {{ .Values.kafkamoon.api.image }}
@@ -19,7 +20,7 @@ spec:
           value: http://{{ .Release.Name }}-keycloak.{{ .Release.Namespace }}.svc.cluster.local/realms/kafkamoon
         - name: KAFKA_BOOTSTRAP_SERVERS
           value: "{{ .Release.Name }}-controller-headless.{{ .Release.Namespace }}.svc.cluster.local:9092,{{ .Release.Name }}-controller-headless.{{ .Release.Namespace }}.svc.cluster.local:9093,{{ .Release.Name }}-controller-headless.{{ .Release.Namespace }}.svc.cluster.local:9094"
-        - name: SPRING_PROFILE_ACTIVES
+        - name: SPRING_PROFILES_ACTIVE
           value: k8s
         resources:
           limits:
