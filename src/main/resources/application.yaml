@@ -1,7 +1,6 @@
 spring:
   application:
     name: kafkamoon-api
-
 kafkamoon:
   kafka:
     retries: 0
@@ -24,3 +23,19 @@ management:
       exposure:
           include: ["prometheus"]
 
+bucket4j:
+  enabled: true
+  cache-to-use: hazelcast-spring
+  filters:
+    - cache-name: rate-limit
+      http-response-body: '{ "type": "", "title": "Too Many Requests", "instance": "", "status": 429, "detail": "You have reached out your limit of requests, try later."}'
+      url: .*
+      rateLimits:
+        - skip-condition: getRequestURI().contains('/get')
+          expression: getRemoteAddr()
+          bandwidths:
+            - capacity: 10
+              time: 1
+              unit: minutes
+              fixed-refill-interval: 30
+              fixed-refill-interval-unit: seconds

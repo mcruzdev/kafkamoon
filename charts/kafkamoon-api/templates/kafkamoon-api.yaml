@@ -15,10 +15,10 @@ spec:
       - name: kafkamoon-api
         image: {{ .Values.kafkamoon.api.image }}
         env:
-          - name: KAFKA_BOOTSTRAP_SERVERS
-            value: {{ .Release.Name }}.{{ .Release.Namespace }}-controller-headless.svc.cluster.local:9092,{{ .Release.Name }}-controller-headless.{{ .Release.Namespace }}.svc.cluster.local:9093
-          - name: SPRING_ACTIVE_PROFILES
-            value: k8s
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "{{ .Release.Name }}-controller-headless.{{ .Release.Namespace }}.svc.cluster.local:9092,{{ .Release.Name }}-controller-headless.{{ .Release.Namespace }}.svc.cluster.local:9093,{{ .Release.Name }}-controller-headless.{{ .Release.Namespace }}.svc.cluster.local:9094"
+        - name: SPRING_PROFILE_ACTIVES
+          value: k8s
         resources:
           limits:
             memory: "1Gi"
