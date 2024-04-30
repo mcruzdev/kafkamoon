@@ -3,7 +3,8 @@
 Welcome to Kafkamoon, a Kafka management application. This project demonstrates integration
 with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) as part of a hiring test.
 
-> [!NOTE] This README documentation contains information on how to run the Kafkamoon application locally using Docker or Kubernetes.
+> [!NOTE] 
+> This README documentation contains information on how to run the Kafkamoon application locally using Docker or Kubernetes.
 > If you want to see all the information about the decisions made in this project, see the official documentation.
 
 ## Table of Contents
@@ -15,7 +16,6 @@ with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) as part of a 
     - [Running the project locally with Docker Compose](#running-the-project-locally-with-docker-compose)
     - [Running the project locally on Kubernetes](#running-the-project-locally-on-kubernetes)
     - [Running the project on EKS](#running-the-project-on-eks)
-- [Running on EKS](#running-on-eks)
 ## Getting Started
 
 ### Prerequisites
@@ -64,7 +64,8 @@ Running with docker-compose you will have:
 - [Kafkamoon documentation](http://localhost:3000)
 - [Kafkamoon API](http://localhost:8080/swagger-ui/index.html)
 
-> [!NOTE] If you want to run only the infrastructure (Kafka) and Documentation run the following command:
+> [!NOTE] 
+> If you want to run only the infrastructure (Kafka) and Documentation run the following command:
 > ```shell
 > docker-compose --profile dev up -d
 > ```
@@ -131,7 +132,8 @@ The ouput should like something like this:
 abc123_d==%
 ```
 
-> [!IMPORTANT] Remove the last character (`%`) from the password.
+> [!IMPORTANT] 
+> Remove the last character (`%`) from the password.
 
 2. Do a `port-forward` command:
 
@@ -154,23 +156,21 @@ First of all, you need:
 
 2. To have a bucket created to store the `terraform.tfstate` file.
 
-> Run the following command: `export TF_VAR_bucket=<add_your_bucket_name>`
+3. Configure the bucket created on [main.tf](terraform-gitops/main.tf) file.
 
-# Running on EKS
-
-1. Go to `terraform-gitops` directory
+4. Go to `terraform-gitops` directory
 
 ```shell
 cd terraform-gitops
 ```
 
-2. Execute `terraform init`
+5. Execute `terraform init`
 
 ```shell
 terraform init
 ```
 
-3. Execute `terraform plan`
+6. Execute `terraform plan`
 
 ```shell
 terraform plan
@@ -178,25 +178,25 @@ terraform plan
 
 Check the `terraform plan` output.
 
-4. Apply the terraform manifests
+7. Apply the terraform manifests
 
 ```shell
 terraform apply --auto-approve
 ```
 
-5. Update current kubeconfig
+8. Update current kubeconfig
 
 ```shell
 aws eks update-kubeconfig --name platformoon-kafkamoon --region us-east-1
 ```
 
-6. Configure Amazon EBS CSI for EKS
+9. Configure Amazon EBS CSI for EKS
 
 The Kafka application creates a PVC and the following configuration is necessary to give all necessary rights.
 
 [See here how to configure Amazon EBS CSI for EKS](EKS_PVC_CONFIGURATION.md)
 
-7. Install helm charts
+10. Install helm charts
 
 ```shell
 make helmUpdate && make helmPkg && make helmInstall
