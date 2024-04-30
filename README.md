@@ -93,22 +93,10 @@ kind create cluster --name local --config=kind/kind-cluster.yaml
 kubectl cluster-info --context kind-local
 ```
 
-3. Update Helm dependencies
+3. Install Kafkamoon Helm Chart
 
 ```shell
-make helmUpdate
-```
-
-4. Package Helm
-
-```shell
-make helmPkg
-```
-
-5. Install the **Kafkamoon** application with Helm:
-
-```shell
-make helmInstall
+make helm
 ```
 
 This installation contains:
@@ -118,28 +106,9 @@ This installation contains:
 - Kafka cluster (2 replicas)
 - Kafkamoon API (2 replicas)
 - Kafkamoon Documentation
-- Keycloak
 
-**Accessing Keycloak**:
-
-1. Get Keycloak user password to access the Keycloak Administration:
-
-```shell
-kubectl get secret kafkamoon-keycloak -o jsonpath='{.data.'admin-password'}' | base64 --decode
-```
-
-2. Do a `port-forward` command:
-
-```shell
-kubectl port-forward svc/kafkamoon-keycloak 8888:80
-```
-
-> [!NOTE]
-> The username is `user`.
->
-> Import the realm [keycloak realm](/keycloak/kafkamoon-realm.json) file create all necessary users with respective
-> roles and enjoy it.
-
+> ![IMPORTANT]
+> Keycloak only lives on production, see [here](https://keycloak.platformoon.com)
 
 **Accessing Grafana:**
 
@@ -167,6 +136,14 @@ kubectl port-forward svc/kafkamoon-grafana-operator-grafana-service 8888:3000
 Access the Grafana through this [url](http://localhost:8888).
 
 > [!IMPORTANT] The username is **admin**.
+
+**Accessing the application:**
+
+1. Do a `port-forward`:
+
+```shell
+kubectl port-forward svc/kafkamoon-api 8080:80
+```
 
 ### Running the project on EKS
 

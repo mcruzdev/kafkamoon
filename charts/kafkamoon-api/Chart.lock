@@ -8,8 +8,8 @@ dependencies:
 - name: grafana-operator
   repository: https://charts.bitnami.com/bitnami
   version: 4.1.0
-- name: hazelcast
-  repository: https://hazelcast-charts.s3.amazonaws.com
-  version: 5.9.1
-digest: sha256:ff2ef41320042a7d61e4950df6c35b094a14eacbcaf0350169a2e07e9a7ccdbb
-generated: "2024-04-29T20:38:41.423242601-03:00"
+- name: keycloak
+  repository: https://charts.bitnami.com/bitnami
+  version: 21.0.3
+digest: sha256:904895f0b0fd71071629a0514923764da4cd1d33fa602bb42aed5fab36850b46
+generated: "2024-04-30T14:11:55.454625189-03:00"

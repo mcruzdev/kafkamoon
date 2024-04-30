@@ -32,3 +32,8 @@ helmDestroy:
 cleanK8s:
 	kubectl delete pvc --all
 .PHONY: cleanK8s
+
+
+helm: helmUpdate helmPkg
+	helm install kafkamoon kafkamoon-0.1.0.tgz --set=kafkamoon.mode=default --set=keycloak.enabled=false
+.PHONY: helm
