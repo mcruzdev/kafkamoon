@@ -4157,26 +4157,12 @@ spec:
       "templating": {
         "list": [
           {
-            "current": {},
-            "datasource": {
-              "uid": "prometheus"
-            },
-            "definition": "label_values(application)",
-            "hide": 0,
-            "includeAll": false,
+            "hide": 2,
             "label": "Application",
-            "multi": false,
             "name": "application",
-            "options": [],
-            "query": "label_values(application)",
-            "refresh": 1,
-            "regex": "",
+            "query": "kafkamoon-api",
             "skipUrlSync": false,
-            "sort": 1,
-            "tagValuesQuery": "",
-            "tagsQuery": "",
-            "type": "query",
-            "useTags": false
+            "type": "constant"
           },
           {
             "current": {},
@@ -4298,7 +4284,7 @@ spec:
         ]
       },
       "timezone": "",
-      "title": "Spring Boot 2.1 System Monitor",
+      "title": "Spring Boot (Micrometer)",
       "uid": "spring_boot_21",
       "version": 1,
       "weekStart": ""
