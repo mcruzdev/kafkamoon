@@ -6,7 +6,8 @@ Documentation:
 
 - https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html
 - https://docs.aws.amazon.com/eks/latest/userguide/csi-iam-role.html
-- 
+- https://docs.aws.amazon.com/eks/latest/userguide/managing-ebs-csi.html#adding-ebs-csi-eks-add-on
+
 1. Enable the IAM OIDC Provider
 First, enable the OpenID Connect (OIDC) provider for your EKS cluster. This allows you to associate IAM roles with Kubernetes service accounts.
 
