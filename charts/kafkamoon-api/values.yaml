@@ -4,7 +4,7 @@ kafkamoon:
   awsRegion: us-east-1
   api:
     port: 8080
-    image: matheuscruzdev/kafkamoon-api:v1.0.0-alpha.3
+    image: matheuscruzdev/kafkamoon-api:v1.0.0
     tls:
       acm:
   docs:
@@ -19,7 +19,7 @@ grafana-operator:
     service:
       annotations:
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
-        service.beta.kubernetes.io/aws-load-balancer-tls-cert: arn:aws:acm:us-east-1:555411961606:certificate/18bf1ea5-991b-435d-919b-8de8f88feed6
+        service.beta.kubernetes.io/aws-load-balancer-tls-cert:
         service.beta.kubernetes.io/aws-load-balancer-tls-ports: "https"
       extraPorts: 
         - port: 80
@@ -89,5 +89,5 @@ keycloak:
       targetPort: 80
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
-      service.beta.kubernetes.io/aws-load-balancer-tls-cert: arn:aws:acm:us-east-1:555411961606:certificate/f2c64af7-6db3-45ec-baed-8ff1a6ac2379
+      service.beta.kubernetes.io/aws-load-balancer-tls-cert:
       service.beta.kubernetes.io/aws-load-balancer-tls-ports: "extraport"
