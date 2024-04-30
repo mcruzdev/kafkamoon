@@ -22,7 +22,7 @@ curl --request POST \
   --url https://keycloak.platformoon.com/realms/kafkamoon/protocol/openid-connect/token \
   --header 'Content-Type: application/x-www-form-urlencoded' \
   --data grant_type=password \
-  --data client_id=itau \
+  --data client_id=<client_id> \
   --data username=<your_username> \
   --data password=<your_password>
 ```
