@@ -35,8 +35,7 @@ public class SecurityConfiguration {
   @Bean
   @Profile({"!k8s", "!it"})
   public SecurityFilterChain disableSecurity(HttpSecurity http) throws Exception {
-    http.securityContext(AbstractHttpConfigurer::disable)
-        .anonymous(
+    http.anonymous(
             httpSecurityAnonymousConfigurer -> {
               httpSecurityAnonymousConfigurer.authorities(
                   List.of(
@@ -44,7 +43,7 @@ public class SecurityConfiguration {
                           ROLE_PREFIX.concat(SecurityConfiguration.ROLE_WRITER)),
                       new SimpleGrantedAuthority(
                           ROLE_PREFIX.concat(SecurityConfiguration.ROLE_READER))));
-            });
+            }).csrf(AbstractHttpConfigurer::disable);
     return http.build();
   }
 }

@@ -4,9 +4,9 @@ spring:
 kafkamoon:
   docs:
     url: https://docs.platformoon.com
-    topic-name-exceeded-limit: ${kafkamoon.docs.url}/#/api?id=topic-name-exceeded-limit
-    invalid-request: ${kafkamoon.docs.url}/#/api?id=invalid-request
-    topic-with-conflict: ${kafkamoon.docs.url}/#/api?id=topic-with-conflict
-    entity-not-found: ${kafkamoon.docs.url}/#/api?id=entity-not-found
-    kafka-communication-failure: ${kafkamoon.docs.url}/#/api?id=kafka-communication-failure
+    topic-name-exceeded-limit: ${kafkamoon.docs.url}/#/api/?id=topic-with-conflict
+    invalid-request: ${kafkamoon.docs.url}/#/api/?id=invalid-request
+    topic-with-conflict: ${kafkamoon.docs.url}/#/api/?id=topic-with-conflict
+    entity-not-found: ${kafkamoon.docs.url}/#/api/?id=entity-not-found
+    kafka-communication-failure: ${kafkamoon.docs.url}/#/api/?id=kafka-communication-failure
 

@@ -3,14 +3,16 @@ services:
   kafkamoon-api:
     profiles:
       - "local"
-    image: kafkamoon-api:latest
+    image: matheuscruzdev/kafkamoon-api:v1.0.0-alpha
+    environment:
+      - SPRING_PROFILES_ACTIVE=default # This does not need Keycloak and Security is disabled
     ports:
       - 8080:8080
   kafkamoon-docs:
     profiles:
       - "dev"
       - "local"
-    image: kafkamoon-docs:main
+    image: matheuscruzdev/kafkamoon-docs:main
     ports:
       - 3000:3000
   zookeeper:
