@@ -43,7 +43,7 @@ To get a better experience for API users we defined a timeout between Kafkamoon 
 **fail fast principle**.
 
 ```properties
-kafkamoon.kafka.request.timeout.seconds=2
+kafkamoon.kafka.default.api.timeout.ms=5000
 ```
 
 - Kafka is down (or bad configurable)

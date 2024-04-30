@@ -42,6 +42,6 @@ The response should resemble this:
 }
 ```
 
-Now you have an `access_token`, which you can use with the "Authorize" button. See below:
+Now, you have an `access_token`, which you can use with the "Authorize" button. See below:
 
 ![img](authorize-button.png)

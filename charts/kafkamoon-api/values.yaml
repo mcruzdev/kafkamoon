@@ -4,7 +4,7 @@ kafkamoon:
   awsRegion: us-east-1
   api:
     port: 8080
-    image: matheuscruzdev/kafkamoon-api:v0.2.0-test.4
+    image: matheuscruzdev/kafkamoon-api:v1.0.0-alpha
     tls:
       acm:
   docs:

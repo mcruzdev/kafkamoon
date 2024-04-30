@@ -93,15 +93,22 @@ dependencies:
     name: kafka
     repository:  https://charts.bitnami.com/bitnami
     version: 28.0.4
+    condition: kafka.enabled
   - alias: prometheus
     name: prometheus
     repository: https://charts.bitnami.com/bitnami
     version: 1.0.6
+    condition: prometheus.enabled
   - alias: grafana-operator
     name: grafana-operator
     repository: https://charts.bitnami.com/bitnami
     version: 4.1.0
-
+    condition: grafana-operator.enabled
+  - alias: keycloak
+    name: keycloak
+    repository: https://charts.bitnami.com/bitnami
+    version: 21.0.3
+    condition: keycloak.enabled
 ```
 
 No diretório **template** temos a [documentação](https://docs.platformoon.com), a [API](https://kafkamoon.platformoon.com) e alguns recursos necessários para ter o Grafana configurado com prometheus e com os dashboard pré-definidos.
@@ -121,7 +128,6 @@ Penso que para o primeiro item é importante tê-lo para preencher os requisitos
 
 Gostaria de apontar algumas coisas que eu teria implementado se tivesse mais tempo:
 
-- Adicionar segurança à API através do OAuth2 usando o Keycloak;
 - Incluir auditoria para rastrear:
   - Quem criou um tópico;
   - Quem deletou um tópico;
