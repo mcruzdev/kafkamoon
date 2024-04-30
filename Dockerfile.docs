@@ -1,7 +1,5 @@
-FROM node:latest
-LABEL description="Kafkamoon API Documentation"
-WORKDIR /docs
-COPY ./docs /docs
-RUN npm install -g docsify-cli@latest
-EXPOSE 3000
-ENTRYPOINT docsify serve .
+FROM nginx:latest
+
+COPY ./docs /usr/share/nginx/html/
+
+EXPOSE 80

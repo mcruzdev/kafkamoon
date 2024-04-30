@@ -43,7 +43,8 @@ public class SecurityConfiguration {
                           ROLE_PREFIX.concat(SecurityConfiguration.ROLE_WRITER)),
                       new SimpleGrantedAuthority(
                           ROLE_PREFIX.concat(SecurityConfiguration.ROLE_READER))));
-            }).csrf(AbstractHttpConfigurer::disable);
+            })
+        .csrf(AbstractHttpConfigurer::disable);
     return http.build();
   }
 }

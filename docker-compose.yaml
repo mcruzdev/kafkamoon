@@ -3,9 +3,10 @@ services:
   kafkamoon-api:
     profiles:
       - "local"
-    image: matheuscruzdev/kafkamoon-api:v1.0.0-alpha
+    image: matheuscruzdev/kafkamoon-api:latest
     environment:
-      - SPRING_PROFILES_ACTIVE=default # This does not need Keycloak and Security is disabled
+      - SPRING_PROFILES_ACTIVE=docker # This does not need Keycloak and Security is disabled
+      - KAFKA_BOOTSTRAP_SERVERS=kafka1:29092,kafka2:29092,kafka3:29092
     ports:
       - 8080:8080
   kafkamoon-docs:
