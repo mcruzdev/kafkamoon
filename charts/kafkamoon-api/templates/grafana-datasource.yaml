@@ -6,7 +6,7 @@ metadata:
 spec:
   instanceSelector:
     matchLabels:
-      dashboards: 
+      dashboards:
   allowCrossNamespaceImport: true
   datasource:
     access: proxy

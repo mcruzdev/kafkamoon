@@ -207,7 +207,7 @@ public class DefaultKafkaClient implements KafkaClient {
                         topics);
                   })
               .toList();
-      this.metrics.increment(MetricName.LIST_CLUSTER_NODE, Tag.statusInit());
+      this.metrics.increment(MetricName.LIST_CLUSTER_NODE, Tag.statusSuccess());
       return list;
     } catch (CompletionException | CancellationException e) {
       LOGGER.error("Error while getting nodes from Kafka cluster", e);

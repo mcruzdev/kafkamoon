@@ -285,3 +285,11 @@ components:
         - dataset
         - dataName
         - criticality
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

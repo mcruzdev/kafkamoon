@@ -11,7 +11,7 @@ See the application running in **production**:
 |---|----------------------------------------------------------------------------------------------|
 | Grafana   | https://grafana.platformoon.com                                                              |  
 | Kafkamoon API | [https://kafkamoon.platformoon.com](https://kafkamoon.platformoon.com/swagger-ui/index.html) |
-
+| Keycloak | [https://keycloak.platformoon.com](https://keycloak.platformoon.com) |
 
 ## Reference
 

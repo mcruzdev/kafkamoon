@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,6 +52,7 @@ public class TopicController {
     this.getTopicByIdUseCase = getTopicByIdUseCase;
   }
 
+  @PreAuthorize("hasRole('WRITER')")
   @PostMapping
   @Timed("create_topic_time")
   public ResponseEntity<CreateTopicUseCaseOutput> create(
@@ -69,6 +71,7 @@ public class TopicController {
         .body(output);
   }
 
+  @PreAuthorize("hasRole('READER')")
   @GetMapping
   @Timed("list_all_topics_time")
   public ResponseEntity<List<ListTopicsUseCaseOutput>> index() {
@@ -76,6 +79,7 @@ public class TopicController {
     return ResponseEntity.ok(this.listTopicsUseCase.execute());
   }
 
+  @PreAuthorize("hasRole('WRITER')")
   @DeleteMapping("/{id}")
   @Timed("delete_topic_time")
   public ResponseEntity<Void> delete(@PathVariable("id") @NotNull @NotBlank String topicId) {
@@ -84,6 +88,7 @@ public class TopicController {
     return ResponseEntity.noContent().build();
   }
 
+  @PreAuthorize("hasRole('READER')")
   @GetMapping("/{id}")
   @Timed("get_topic_by_id_time")
   public GetTopicByIdUseCaseOutput getById(@PathVariable("id") @NotNull @NotBlank String topicId) {
