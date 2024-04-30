@@ -66,3 +66,5 @@ prometheus:
 # bitnami/keycloak
 keycloak:
   enabled: true
+  service:
+    type: "LoadBalancer"

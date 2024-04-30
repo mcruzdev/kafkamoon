@@ -19,6 +19,7 @@ public class SecurityConfiguration {
   public static final String ROLE_WRITER = "WRITER";
 
   @Bean
+  @Profile({"k8s", "it"})
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
         .oauth2ResourceServer(
