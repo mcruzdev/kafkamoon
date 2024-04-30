@@ -3,9 +3,6 @@ package dev.matheuscruz.kafkamoon.api.application.usecases.topics.get;
 import dev.matheuscruz.kafkamoon.api.application.model.cluster.KafkaNodeDetails;
 import dev.matheuscruz.kafkamoon.api.application.model.topic.PartitionInfo;
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
-import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.MetricName;
-import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.Metrics;
-import dev.matheuscruz.kafkamoon.api.infrastructure.o11y.Tag;
 import java.util.function.Predicate;
 import org.apache.kafka.clients.admin.TopicDescription;
 import org.apache.kafka.common.Node;
@@ -20,11 +17,9 @@ import org.springframework.stereotype.Component;
 public class GetTopicByIdUseCase {
 
   private final KafkaClient kafkaClient;
-  private final Metrics metrics;
 
-  public GetTopicByIdUseCase(KafkaClient kafkaClient, Metrics metrics) {
+  public GetTopicByIdUseCase(KafkaClient kafkaClient) {
     this.kafkaClient = kafkaClient;
-    this.metrics = metrics;
   }
 
   public Predicate<Node> isNotLeaderId(String leaderId) {
@@ -32,7 +27,6 @@ public class GetTopicByIdUseCase {
   }
 
   public GetTopicByIdUseCaseOutput execute(String topicId) {
-    this.metrics.increment(MetricName.GET_TOPIC_BY_ID, Tag.statusInit());
     TopicDescription topic =
         this.kafkaClient
             .getTopicById(topicId)

@@ -15,7 +15,7 @@ public class DeleteTopicByIdUseCase {
     this.kafkaClient = kafkaClient;
   }
 
-  public void execute(String topicUUid) {
-    this.kafkaClient.deleteTopic(topicUUid);
+  public void execute(String id) {
+    this.kafkaClient.deleteTopic(id);
   }
 }
