@@ -6,7 +6,7 @@ with [Kafka APIs](https://docs.confluent.io/kafka/kafka-apis.html) as part of a 
 > [!NOTE]
 > This README documentation contains information on how to run the Kafkamoon application locally using Docker or
 > Kubernetes.
-> If you want to see all the information about the decisions made in this project, see the official documentation.
+> If you want to see all the information about the decisions made in this project, [see here](https://docs.platformoon.com/#/explanation/README).
 
 ## Table of Contents
 
@@ -107,8 +107,8 @@ This installation contains:
 - Kafkamoon API (2 replicas)
 - Kafkamoon Documentation
 
-> ![IMPORTANT]
-> Keycloak only lives on production, see [here](https://keycloak.platformoon.com)
+> [!IMPORTANT]
+> Keycloak only lives on production, see [here](https://keycloak.platformoon.com).
 
 **Accessing Grafana:**
 
@@ -135,7 +135,8 @@ kubectl port-forward svc/kafkamoon-grafana-operator-grafana-service 8888:3000
 
 Access the Grafana through this [url](http://localhost:8888).
 
-> [!IMPORTANT] The username is **admin**.
+> [!IMPORTANT]
+> The username is **admin**.
 
 **Accessing the application:**
 
