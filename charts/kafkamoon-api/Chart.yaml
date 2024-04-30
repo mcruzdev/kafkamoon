@@ -38,3 +38,8 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     version: 4.1.0
     condition: grafana-operator.enabled
+  - alias: keycloak
+    name: keycloak
+    repository: https://charts.bitnami.com/bitnami
+    version: 21.0.3
+    condition: keycloak.enabled

@@ -26,14 +26,17 @@ kind: Service
 metadata:
   name: 'kafkamoon-docs'
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
-    service.beta.kubernetes.io/aws-load-balancer-tls-cert: "{{ .Values.kafkamoon.certificates.docs }}"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-tls-cert: arn:aws:acm:{{ .Values.kafkamoon.awsRegion }}:{{ .Values.kafkamoon.awsAccount }}:certificate/{{ .Values.kafkamoon.docs.tls.acm }}
     service.beta.kubernetes.io/aws-load-balancer-tls-ports: "https"
 spec:
   type: LoadBalancer
   selector:
     app: 'kafkamoon-docs'
   ports:
+  - name: "http"
+    port: 80
+    targetPort: {{ .Values.kafkamoon.docs.port }}
   - name: "https"
     port: 443
-    targetPort: 3000
+    targetPort: {{ .Values.kafkamoon.docs.port }}

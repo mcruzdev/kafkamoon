@@ -11,6 +11,7 @@ import dev.matheuscruz.kafkamoon.api.application.model.topic.TopicCriticality;
 import dev.matheuscruz.kafkamoon.api.application.model.topic.TopicName;
 import dev.matheuscruz.kafkamoon.api.application.usecases.topics.list.ListTopicsUseCaseOutput;
 import dev.matheuscruz.kafkamoon.api.infrastructure.kafka.KafkaClient;
+import dev.matheuscruz.kafkamoon.api.infrastructure.security.SecurityConfiguration;
 import dev.matheuscruz.kafkamoon.api.presentation.dto.CreateTopicRequest;
 import java.util.Arrays;
 import org.apache.kafka.common.Uuid;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -59,6 +61,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should create a topic correctly when the request is valid")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_WRITER)
   void shouldReturn201Created() throws Exception {
     // arrange
     CreateTopicRequest request =
@@ -77,7 +80,8 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should not create a topic with the same name")
-  void shouldReturn201Conflict() throws Exception {
+  @WithMockUser(roles = SecurityConfiguration.ROLE_WRITER)
+  void shouldReturn409Conflict() throws Exception {
 
     // arrange
     CreateTopicRequest request =
@@ -111,6 +115,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should not create a topic when message type is null")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_WRITER)
   void shouldReturn400BadRequestMessageTypeIsNull() throws Exception {
 
     CreateTopicRequest request = new CreateTopicRequest(null, "dataset", "dataName", "TEST");
@@ -131,6 +136,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should not create a topic when message type is empty")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_WRITER)
   void shouldReturn400BadRequestMessageTypeIsEmpty() throws Exception {
 
     CreateTopicRequest request = new CreateTopicRequest("", "dataset", "dataName", "TEST");
@@ -151,6 +157,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should not create a topic when data name is null")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_WRITER)
   void shouldReturn400BadRequestDataNameIsNull() throws Exception {
 
     CreateTopicRequest request = new CreateTopicRequest("user", "dataset", null, "TEST");
@@ -171,6 +178,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should not create a topic when data name is empty")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_WRITER)
   void shouldReturn400BadRequestDataNameIsEmpty() throws Exception {
 
     CreateTopicRequest request = new CreateTopicRequest("user", "dataset", "", "TEST");
@@ -191,6 +199,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should not create a topic when dataset is null")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_WRITER)
   void shouldReturn400BadRequestDatasetIsNull() throws Exception {
 
     CreateTopicRequest request = new CreateTopicRequest("user", null, "dataName", "TEST");
@@ -211,6 +220,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should not create a topic when dataset is empty")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_WRITER)
   void shouldReturn400BadRequestDatasetIsEmpty() throws Exception {
 
     CreateTopicRequest request = new CreateTopicRequest("user", "", "dataName", "TEST");
@@ -231,6 +241,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should not create a topic when dataset is empty")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_WRITER)
   void shouldReturn400BadRequestCriticalityIsEmpty() throws Exception {
 
     CreateTopicRequest request = new CreateTopicRequest("user", "dataset", "dataName", "");
@@ -251,6 +262,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should not create a topic when dataset is empty")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_WRITER)
   void shouldReturn400BadRequestCriticalityIsNotTest() throws Exception {
 
     CreateTopicRequest request =
@@ -272,6 +284,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should not create a topic when the topic name exceeds the length")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_WRITER)
   void shouldReturn400BadRequestTopicNameExceeded() throws Exception {
     // arrange
     CreateTopicRequest request =
@@ -300,6 +313,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should list topics correctly")
+  @WithMockUser(roles = {SecurityConfiguration.ROLE_WRITER, SecurityConfiguration.ROLE_READER})
   void shouldReturnEmptyPage() throws Exception {
 
     // arrange
@@ -341,6 +355,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should delete topic correctly by id")
+  @WithMockUser(roles = {SecurityConfiguration.ROLE_WRITER, SecurityConfiguration.ROLE_READER})
   void shouldReturn204NoContentWhenDeleteATopic() throws Exception {
     // arrange
     CreateTopicRequest request =
@@ -402,6 +417,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should return 204 no content when there is no topic with the provided id")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_WRITER)
   void shouldReturn204NoContentWhenDeleteANonExistentTopic() throws Exception {
     // arrange
     String instance = "/api/v1/topics/%s".formatted(Uuid.randomUuid().toString());
@@ -411,6 +427,7 @@ class TopicControllerITest extends AbstractBaseITest {
 
   @Test
   @DisplayName("Should get topic detail correctly")
+  @WithMockUser(roles = SecurityConfiguration.ROLE_READER)
   void shouldGetTopicCorrectly() throws Exception {
     // arrange
 
@@ -428,12 +445,5 @@ class TopicControllerITest extends AbstractBaseITest {
         .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.is("user.dataset.dataName")))
         .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(id)))
         .andExpect(MockMvcResultMatchers.jsonPath("$.partitionInfos").isArray());
-  }
-
-  @Test
-  @DisplayName("Should return 404 when there is no topic with provided id")
-  void shouldReturn404FindingByTopicId() {
-    // arrange
-
   }
 }

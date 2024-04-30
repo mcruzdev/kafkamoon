@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   name: kafkamoon-api
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: kafkamoon-api
@@ -15,10 +16,12 @@ spec:
       - name: kafkamoon-api
         image: {{ .Values.kafkamoon.api.image }}
         env:
-          - name: KAFKA_BOOTSTRAP_SERVERS
-            value: {{ .Release.Name }}.{{ .Release.Namespace }}-controller-headless.svc.cluster.local:9092,{{ .Release.Name }}-controller-headless.{{ .Release.Namespace }}.svc.cluster.local:9093
-          - name: SPRING_ACTIVE_PROFILES
-            value: k8s
+        - name: KEYCLOAK_ISSUER_URI
+          value: https://keycloak.platformoon.com/realms/kafkamoon
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "{{ .Release.Name }}.{{ .Release.Namespace }}.svc.cluster.local:9092"
+        - name: SPRING_PROFILES_ACTIVE
+          value: {{ .Values.kafkamoon.mode }}
         resources:
           limits:
             memory: "1Gi"
@@ -31,14 +34,17 @@ kind: Service
 metadata:
   name: 'kafkamoon-api'
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
-    service.beta.kubernetes.io/aws-load-balancer-tls-cert: {{ .Values.kafkamoon.certificates.api }}
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-tls-cert: arn:aws:acm:{{ .Values.kafkamoon.awsRegion }}:{{ .Values.kafkamoon.awsAccount }}:certificate/{{ .Values.kafkamoon.api.tls.acm }}
     service.beta.kubernetes.io/aws-load-balancer-tls-ports: "https"
 spec:
   type: LoadBalancer
   selector:
     app: 'kafkamoon-api'
   ports:
+  - name: "http"
+    port: 80
+    targetPort: {{ .Values.kafkamoon.api.port }}
   - name: "https"
     port: 443
-    targetPort: 8080
+    targetPort: {{ .Values.kafkamoon.api.port }}
