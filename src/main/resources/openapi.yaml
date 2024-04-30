@@ -13,6 +13,10 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/GetClusterNodesResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
         "502":
           description: "Bad Gateway"
           content:
@@ -29,6 +33,10 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/GetClusterInfoResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
         "502":
           description: "Bad Gateway"
           content:
@@ -52,6 +60,10 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/GetTopicByIdResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
         "502":
           description: "Bad Gateway"
           content:
@@ -70,6 +82,10 @@ paths:
       responses:
         "204":
           description: No Content
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
         "502":
           description: "Bad Gateway"
           content:
@@ -86,6 +102,10 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/GetTopicsResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
         "502":
           description: "Bad Gateway"
           content:
@@ -118,6 +138,10 @@ paths:
             "application/json":
               schema:
                 $ref: "#/components/schemas/ProblemDetails"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
         "409":
           description: Conflict
           content:

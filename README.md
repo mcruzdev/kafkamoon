@@ -186,7 +186,7 @@ terraform apply --auto-approve
 8. Update current kubeconfig
 
 ```shell
-aws eks update-kubeconfig --name platformoon-kafkamoon --region us-east-1
+aws eks update-kubeconfig --name <cluster_name> --region <region>
 ```
 
 9. Configure Amazon EBS CSI for EKS
